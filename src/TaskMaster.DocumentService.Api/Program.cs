@@ -32,6 +32,9 @@ builder.Services.AddSingleton(serviceProvider =>
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 
+// Add Document Service (Business Logic Layer)
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+
 // Add health checks
 builder.Services.AddHealthChecks()
     .AddSqlServer(
