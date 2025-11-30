@@ -1,0 +1,6 @@
+@TaskMaster.DocumentService.Api_HostAddress = http://localhost:5011
+
+GET {{TaskMaster.DocumentService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

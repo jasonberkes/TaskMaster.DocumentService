@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "5hBbYAeCB20=",
+  "success": true,
+  "projectFilePath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+  "expectedPackageFiles": [
+    "/Users/jasonberkes/.nuget/packages/system.io.pipelines/10.0.0/system.io.pipelines.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/system.text.encodings.web/10.0.0/system.text.encodings.web.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.11/microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.netcore.app.ref/9.0.11/microsoft.netcore.app.ref.9.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}
