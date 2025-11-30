@@ -1,3 +1,6 @@
+using Azure.Storage.Blobs;
+using TaskMaster.DocumentService.Core.Interfaces;
+using TaskMaster.DocumentService.Core.Services;
 using TaskMaster.DocumentService.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +11,25 @@ builder.Services.AddOpenApi();
 
 // Add Document Service Data layer (DbContext, Repositories, UnitOfWork)
 builder.Services.AddDocumentServiceData(builder.Configuration);
+
+// Configure Blob Storage
+builder.Services.Configure<BlobStorageOptions>(
+    builder.Configuration.GetSection(BlobStorageOptions.SectionName));
+
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("BlobStorage")
+        ?? builder.Configuration["BlobStorage:ConnectionString"];
+
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("BlobStorage connection string is not configured.");
+    }
+
+    return new BlobServiceClient(connectionString);
+});
+
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 var app = builder.Build();
 
