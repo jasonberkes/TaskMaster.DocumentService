@@ -130,6 +130,7 @@ builder.Services.AddSingleton(serviceProvider =>
 });
 
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add health checks
 builder.Services.AddHealthChecks()
