@@ -23,6 +23,7 @@
     <ProjectReference Include="..\TaskMaster.DocumentService.Data\TaskMaster.DocumentService.Data.csproj" />
     <ProjectReference Include="..\TaskMaster.DocumentService.Search\TaskMaster.DocumentService.Search.csproj" />
     <ProjectReference Include="..\TaskMaster.DocumentService.Processing\TaskMaster.DocumentService.Processing.csproj" />
+    <ProjectReference Include="..\TaskMaster.DocumentService.SDK\TaskMaster.DocumentService.SDK.csproj" />
   </ItemGroup>
 
 </Project>

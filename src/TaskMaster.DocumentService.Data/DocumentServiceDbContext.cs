@@ -33,6 +33,11 @@ public class DocumentServiceDbContext : DbContext
     public DbSet<Document> Documents => Set<Document>();
 
     /// <summary>
+    /// Gets or sets the DocumentTemplates DbSet.
+    /// </summary>
+    public DbSet<DocumentTemplate> DocumentTemplates => Set<DocumentTemplate>();
+
+    /// <summary>
     /// Configures the entity models and relationships.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
@@ -209,6 +214,95 @@ public class DocumentServiceDbContext : DbContext
             entity.HasOne(e => e.ParentDocument)
                 .WithMany(e => e.ChildDocuments)
                 .HasForeignKey(e => e.ParentDocumentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure DocumentTemplate entity
+        modelBuilder.Entity<DocumentTemplate>(entity =>
+        {
+            entity.ToTable("DocumentTemplates");
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(2000);
+
+            entity.Property(e => e.BlobPath)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(e => e.MimeType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.OriginalFileName)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.Category)
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Version)
+                .IsRequired()
+                .HasDefaultValue(1);
+
+            entity.Property(e => e.IsCurrentVersion)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            entity.HasIndex(e => e.IsDeleted)
+                .HasDatabaseName("IX_DocumentTemplates_IsDeleted");
+
+            entity.Property(e => e.DeletedBy)
+                .HasMaxLength(200);
+
+            // Foreign key relationships
+            entity.HasOne(e => e.Tenant)
+                .WithMany()
+                .HasForeignKey(e => e.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => e.TenantId)
+                .HasDatabaseName("IX_DocumentTemplates_TenantId");
+
+            entity.HasOne(e => e.DocumentType)
+                .WithMany()
+                .HasForeignKey(e => e.DocumentTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => new { e.TenantId, e.Name })
+                .HasDatabaseName("IX_DocumentTemplates_TenantId_Name");
+
+            entity.HasIndex(e => new { e.TenantId, e.Category })
+                .HasDatabaseName("IX_DocumentTemplates_TenantId_Category");
+
+            entity.HasIndex(e => e.IsActive)
+                .HasDatabaseName("IX_DocumentTemplates_IsActive");
+
+            // Self-referencing relationship for versioning
+            entity.HasOne(e => e.ParentTemplate)
+                .WithMany(e => e.ChildTemplates)
+                .HasForeignKey(e => e.ParentTemplateId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

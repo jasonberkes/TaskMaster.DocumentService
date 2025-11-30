@@ -16,6 +16,7 @@ public class UnitOfWork : IUnitOfWork
     private ITenantRepository? _tenants;
     private IDocumentTypeRepository? _documentTypes;
     private IDocumentRepository? _documents;
+    private IDocumentTemplateRepository? _documentTemplates;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -53,6 +54,16 @@ public class UnitOfWork : IUnitOfWork
         {
             _documents ??= new DocumentRepository(_context);
             return _documents;
+        }
+    }
+
+    /// <inheritdoc/>
+    public IDocumentTemplateRepository DocumentTemplates
+    {
+        get
+        {
+            _documentTemplates ??= new DocumentTemplateRepository(_context);
+            return _documentTemplates;
         }
     }
 
