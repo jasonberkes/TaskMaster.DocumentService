@@ -1,0 +1,239 @@
+name: Deploy to Azure Container Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'infrastructure/**'
+      - '.github/workflows/deploy-azure.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+        default: 'dev'
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SERVICE_NAME: 'taskmaster-document-service'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build-push.outputs.digest }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Test Results
+        path: '**/test-results.trx'
+        reporter: dotnet-trx
+        fail-on-error: true
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io
+        username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+        password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+
+    - name: Extract metadata for Docker
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      id: build-push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./src/TaskMaster.DocumentService.Api/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}:buildcache
+        cache-to: type=registry,ref=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}:buildcache,mode=max
+        provenance: false
+
+  deploy-dev:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'dev'
+    environment:
+      name: dev
+      url: ${{ steps.deploy.outputs.container-app-url }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_DEV }}
+
+    - name: Deploy Bicep template
+      id: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_DEV }}
+        template: ./infrastructure/bicep/main.bicep
+        parameters: >
+          ./infrastructure/bicep/main.parameters.dev.json
+          containerImage=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}:latest
+          containerRegistryName=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}
+          sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN_DEV }}
+          sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD_DEV }}
+        failOnStdErr: false
+
+    - name: Get Container App URL
+      id: get-url
+      run: |
+        URL=$(az deployment group show \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_DEV }} \
+          --name main \
+          --query properties.outputs.containerAppUrl.value \
+          --output tsv)
+        echo "container-app-url=$URL" >> $GITHUB_OUTPUT
+
+    - name: Wait for deployment to be ready
+      run: |
+        echo "Waiting for Container App to be ready..."
+        sleep 30
+
+        URL="${{ steps.get-url.outputs.container-app-url }}/health"
+        MAX_ATTEMPTS=10
+        ATTEMPT=0
+
+        while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+          if curl -f -s -o /dev/null -w "%{http_code}" "$URL" | grep -q "200"; then
+            echo "Container App is ready!"
+            exit 0
+          fi
+          echo "Attempt $((ATTEMPT+1))/$MAX_ATTEMPTS: Waiting for health check..."
+          sleep 10
+          ATTEMPT=$((ATTEMPT+1))
+        done
+
+        echo "Container App failed to become ready"
+        exit 1
+
+    - name: Run database migrations
+      run: |
+        echo "Database migrations should be run manually or via a separate job"
+        echo "Connection string available in Container App secrets"
+
+  deploy-staging:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.container-app-url }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
+
+    - name: Deploy Bicep template
+      id: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_STAGING }}
+        template: ./infrastructure/bicep/main.bicep
+        parameters: >
+          ./infrastructure/bicep/main.parameters.dev.json
+          environmentName=staging
+          containerImage=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}:latest
+          containerRegistryName=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}
+          sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN_STAGING }}
+          sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD_STAGING }}
+        failOnStdErr: false
+
+  deploy-prod:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'prod'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.container-app-url }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+
+    - name: Deploy Bicep template
+      id: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_PROD }}
+        template: ./infrastructure/bicep/main.bicep
+        parameters: >
+          ./infrastructure/bicep/main.parameters.prod.json
+          containerImage=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.SERVICE_NAME }}:latest
+          containerRegistryName=${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}
+          sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN_PROD }}
+          sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD_PROD }}
+        failOnStdErr: false
+
+    - name: Get Container App URL
+      id: get-url
+      run: |
+        URL=$(az deployment group show \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_PROD }} \
+          --name main \
+          --query properties.outputs.containerAppUrl.value \
+          --output tsv)
+        echo "container-app-url=$URL" >> $GITHUB_OUTPUT

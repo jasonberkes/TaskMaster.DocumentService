@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "prod"
+    },
+    "serviceName": {
+      "value": "taskmaster-document-service"
+    },
+    "containerImage": {
+      "value": "CONTAINER_REGISTRY_NAME.azurecr.io/taskmaster-document-service:latest"
+    },
+    "containerRegistryName": {
+      "value": "CONTAINER_REGISTRY_NAME"
+    },
+    "sqlAdminLogin": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/SUBSCRIPTION_ID/resourceGroups/RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/KEY_VAULT_NAME"
+        },
+        "secretName": "sql-admin-login"
+      }
+    },
+    "sqlAdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/SUBSCRIPTION_ID/resourceGroups/RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/KEY_VAULT_NAME"
+        },
+        "secretName": "sql-admin-password"
+      }
+    },
+    "sqlDatabaseSku": {
+      "value": "S1"
+    },
+    "minReplicas": {
+      "value": 2
+    },
+    "maxReplicas": {
+      "value": 10
+    },
+    "cpuCore": {
+      "value": "1.0"
+    },
+    "memorySize": {
+      "value": "2Gi"
+    }
+  }
+}
