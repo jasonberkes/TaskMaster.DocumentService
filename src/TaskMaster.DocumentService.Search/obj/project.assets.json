@@ -19,39 +19,54 @@
           }
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net6.0/_._": {}
-        }
-      },
-      "Microsoft.Extensions.Logging.Abstractions/8.0.2": {
+      "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/9.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
       "Microsoft.IdentityModel.Abstractions/8.7.0": {
@@ -97,6 +112,31 @@
           "lib/net9.0/Microsoft.IdentityModel.Logging.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "Microsoft.IdentityModel.Protocols/8.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "8.0.1"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols": "8.0.1",
+          "System.IdentityModel.Tokens.Jwt": "8.0.1"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {}
         }
       },
       "Microsoft.IdentityModel.Tokens/8.7.0": {
@@ -215,6 +255,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "System.Text.Json": "10.0.0"
         },
         "compile": {
@@ -242,10 +284,25 @@
         "meilisearch.nuspec"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
-      "sha512": "3iE7UF7MQkCv1cxzCahz+Y/guQbTqieyxyaWKhrRO91itI9cOKO76OHeQDahqG4MmW5umr3CcCvGmK92lWNlbg==",
+    "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
+      "sha512": "bs+1Pq3vQdS2lTyxNUd9fEhtMsq3eLUpK36k2t56iDMVrk6OrAoFtvrQrTK0Y0OetTcJrUkGU7hBlf+ORzHLqQ==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.2",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.0": {
+      "sha512": "+6f2qv2a3dLwd5w6JanPIPs47CxRbnk+ZocMJUhv9NxP88VlOcJYZs9jY+MYSjxvady08bUZn6qgiNh7DadGgg==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -255,29 +312,22 @@
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
         "buildTransitive/net462/_._",
-        "buildTransitive/net6.0/_._",
+        "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
         "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/8.0.2": {
-      "sha512": "nroMDjS7hNBPtkZqVBbSiQaQjWRDxITI8Y7XnDs97rqG3EbzVTNLZQf7bIeUJcaHOV8bca47s1Uxq94+2oGdxA==",
+    "Microsoft.Extensions.Logging.Abstractions/9.0.0": {
+      "sha512": "g0UfujELzlLbHoVG8kPKVBaW470Ewi+jnptGS9KUi6jcb+k2StujtK3m26DFSGGwQ/+bVgZfsWqNzlP6YOejvw==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/8.0.2",
+      "path": "microsoft.extensions.logging.abstractions/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -329,20 +379,14 @@
         "analyzers/dotnet/roslyn4.4/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
         "buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets",
         "buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets",
-        "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets",
         "buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets",
         "lib/net462/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/net462/Microsoft.Extensions.Logging.Abstractions.xml",
-        "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.9.0.0.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -417,6 +461,40 @@
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
         "microsoft.identitymodel.logging.8.7.0.nupkg.sha512",
         "microsoft.identitymodel.logging.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Protocols/8.0.1": {
+      "sha512": "uA2vpKqU3I2mBBEaeJAWPTjT9v1TZrGWKdgK6G5qJd03CLx83kdiqO9cmiK8/n1erkHzFBwU/RphP83aAe3i3g==",
+      "type": "package",
+      "path": "microsoft.identitymodel.protocols/8.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/Microsoft.IdentityModel.Protocols.dll",
+        "lib/net472/Microsoft.IdentityModel.Protocols.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Protocols.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Protocols.dll",
+        "lib/net9.0/Microsoft.IdentityModel.Protocols.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.dll",
+        "microsoft.identitymodel.protocols.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.protocols.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.0.1": {
+      "sha512": "AQDbfpL+yzuuGhO/mQhKNsp44pm5Jv8/BI4KiFXR7beVGZoSH35zMV3PrmcfvSTsyI6qrcR898NzUauD6SRigg==",
+      "type": "package",
+      "path": "microsoft.identitymodel.protocols.openidconnect/8.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/net472/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "microsoft.identitymodel.protocols.openidconnect.8.0.1.nupkg.sha512",
+        "microsoft.identitymodel.protocols.openidconnect.nuspec"
       ]
     },
     "Microsoft.IdentityModel.Tokens/8.7.0": {
@@ -638,24 +716,24 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Meilisearch >= 0.17.1",
+      "MeiliSearch >= 0.17.1",
       "TaskMaster.DocumentService.Core >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "/Users/jasonberkes/.nuget/packages/": {}
+    "/home/claude/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
+      "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
       "projectName": "TaskMaster.DocumentService.Search",
-      "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
-      "packagesPath": "/Users/jasonberkes/.nuget/packages/",
-      "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/obj/",
+      "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
+      "packagesPath": "/home/claude/.nuget/packages/",
+      "outputPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
+        "/home/claude/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -667,8 +745,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
             }
           }
         }
@@ -689,7 +767,7 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
-          "Meilisearch": {
+          "MeiliSearch": {
             "target": "Package",
             "version": "[0.17.1, )"
           }
@@ -720,7 +798,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

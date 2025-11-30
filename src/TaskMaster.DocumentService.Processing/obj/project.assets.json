@@ -125,6 +125,21 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
         "type": "package",
         "compile": {
@@ -527,38 +542,29 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Protocols/6.35.0": {
+      "Microsoft.IdentityModel.Protocols/8.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "6.35.0",
-          "Microsoft.IdentityModel.Tokens": "6.35.0"
+          "Microsoft.IdentityModel.Tokens": "8.0.1"
         },
         "compile": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.dll": {
-            "related": ".xml"
-          }
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.dll": {}
         },
         "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.dll": {
-            "related": ".xml"
-          }
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.dll": {}
         }
       },
-      "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0": {
+      "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Protocols": "6.35.0",
-          "System.IdentityModel.Tokens.Jwt": "6.35.0"
+          "Microsoft.IdentityModel.Protocols": "8.0.1",
+          "System.IdentityModel.Tokens.Jwt": "8.0.1"
         },
         "compile": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {
-            "related": ".xml"
-          }
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {}
         },
         "runtime": {
-          "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {
-            "related": ".xml"
-          }
+          "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll": {}
         }
       },
       "Microsoft.IdentityModel.Tokens/8.7.0": {
@@ -1125,6 +1131,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "System.Text.Json": "10.0.0"
         },
         "compile": {
@@ -1302,6 +1310,21 @@
         "logo.png",
         "meilisearch.0.17.1.nupkg.sha512",
         "meilisearch.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
+      "sha512": "bs+1Pq3vQdS2lTyxNUd9fEhtMsq3eLUpK36k2t56iDMVrk6OrAoFtvrQrTK0Y0OetTcJrUkGU7hBlf+ORzHLqQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
@@ -1907,49 +1930,37 @@
         "microsoft.identitymodel.logging.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Protocols/6.35.0": {
-      "sha512": "BPQhlDzdFvv1PzaUxNSk+VEPwezlDEVADIKmyxubw7IiELK18uJ06RQ9QKKkds30XI+gDu9n8j24XQ8w7fjWcg==",
+    "Microsoft.IdentityModel.Protocols/8.0.1": {
+      "sha512": "uA2vpKqU3I2mBBEaeJAWPTjT9v1TZrGWKdgK6G5qJd03CLx83kdiqO9cmiK8/n1erkHzFBwU/RphP83aAe3i3g==",
       "type": "package",
-      "path": "microsoft.identitymodel.protocols/6.35.0",
+      "path": "microsoft.identitymodel.protocols/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net45/Microsoft.IdentityModel.Protocols.dll",
-        "lib/net45/Microsoft.IdentityModel.Protocols.xml",
-        "lib/net461/Microsoft.IdentityModel.Protocols.dll",
-        "lib/net461/Microsoft.IdentityModel.Protocols.xml",
         "lib/net462/Microsoft.IdentityModel.Protocols.dll",
-        "lib/net462/Microsoft.IdentityModel.Protocols.xml",
         "lib/net472/Microsoft.IdentityModel.Protocols.dll",
-        "lib/net472/Microsoft.IdentityModel.Protocols.xml",
         "lib/net6.0/Microsoft.IdentityModel.Protocols.dll",
-        "lib/net6.0/Microsoft.IdentityModel.Protocols.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Protocols.dll",
+        "lib/net9.0/Microsoft.IdentityModel.Protocols.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.dll",
-        "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.xml",
-        "microsoft.identitymodel.protocols.6.35.0.nupkg.sha512",
+        "microsoft.identitymodel.protocols.8.0.1.nupkg.sha512",
         "microsoft.identitymodel.protocols.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0": {
-      "sha512": "LMtVqnECCCdSmyFoCOxIE5tXQqkOLrvGrL7OxHg41DIm1bpWtaCdGyVcTAfOQpJXvzND9zUKIN/lhngPkYR8vg==",
+    "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.0.1": {
+      "sha512": "AQDbfpL+yzuuGhO/mQhKNsp44pm5Jv8/BI4KiFXR7beVGZoSH35zMV3PrmcfvSTsyI6qrcR898NzUauD6SRigg==",
       "type": "package",
-      "path": "microsoft.identitymodel.protocols.openidconnect/6.35.0",
+      "path": "microsoft.identitymodel.protocols.openidconnect/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net45/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/net45/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
-        "lib/net461/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/net461/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
         "lib/net462/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/net462/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
         "lib/net472/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/net472/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
         "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
-        "lib/netstandard2.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.xml",
-        "microsoft.identitymodel.protocols.openidconnect.6.35.0.nupkg.sha512",
+        "microsoft.identitymodel.protocols.openidconnect.8.0.1.nupkg.sha512",
         "microsoft.identitymodel.protocols.openidconnect.nuspec"
       ]
     },
@@ -2994,19 +3005,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/jasonberkes/.nuget/packages/": {}
+    "/home/claude/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
+      "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
       "projectName": "TaskMaster.DocumentService.Processing",
-      "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
-      "packagesPath": "/Users/jasonberkes/.nuget/packages/",
-      "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/obj/",
+      "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
+      "packagesPath": "/home/claude/.nuget/packages/",
+      "outputPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Processing/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
+        "/home/claude/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3018,14 +3029,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
             },
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
             },
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
             }
           }
         }
@@ -3085,7 +3096,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

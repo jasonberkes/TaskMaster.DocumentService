@@ -10,3 +10,16 @@
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/refint/TaskMaster.DocumentService.Core.dll
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.pdb
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/ref/TaskMaster.DocumentService.Core.dll
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.csproj.AssemblyReference.cache
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.AssemblyInfoInputs.cache
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.AssemblyInfo.cs
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.csproj.CoreCompileInputs.cache
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.sourcelink.json
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.dll
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/refint/TaskMaster.DocumentService.Core.dll
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/TaskMaster.DocumentService.Core.pdb
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/bin/Debug/net9.0/TaskMaster.DocumentService.Core.deps.json
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/bin/Debug/net9.0/TaskMaster.DocumentService.Core.dll
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/bin/Debug/net9.0/TaskMaster.DocumentService.Core.pdb
+/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/Debug/net9.0/ref/TaskMaster.DocumentService.Core.dll

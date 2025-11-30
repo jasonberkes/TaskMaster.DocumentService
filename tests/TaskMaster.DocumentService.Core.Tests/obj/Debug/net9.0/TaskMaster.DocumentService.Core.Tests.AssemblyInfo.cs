@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskMaster.DocumentService.Core.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6099a945abc4b9d8865cf540c1833298a33ecb2f")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskMaster.DocumentService.Core.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskMaster.DocumentService.Core.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

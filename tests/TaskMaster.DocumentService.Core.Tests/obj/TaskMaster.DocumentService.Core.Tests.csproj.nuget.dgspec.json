@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj": {}
+    "/workspace/TaskMaster.DocumentService-exec-1100/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj": {}
   },
   "projects": {
-    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+    "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
         "projectName": "TaskMaster.DocumentService.Core",
-        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
-        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
-        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/",
+        "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+        "packagesPath": "/home/claude/.nuget/packages/",
+        "outputPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
+          "/home/claude/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -44,6 +44,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "System.Text.Json": {
               "target": "Package",
               "version": "[10.0.0, )"
@@ -75,21 +83,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj": {
+    "/workspace/TaskMaster.DocumentService-exec-1100/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj",
+        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-1100/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj",
         "projectName": "TaskMaster.DocumentService.Core.Tests",
-        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj",
-        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
-        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/obj/",
+        "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/tests/TaskMaster.DocumentService.Core.Tests/TaskMaster.DocumentService.Core.Tests.csproj",
+        "packagesPath": "/home/claude/.nuget/packages/",
+        "outputPath": "/workspace/TaskMaster.DocumentService-exec-1100/tests/TaskMaster.DocumentService.Core.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
+          "/home/claude/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -101,8 +109,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+              "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+                "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
               }
             }
           }
@@ -126,6 +134,10 @@
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[17.12.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
             },
             "coverlet.collector": {
               "target": "Package",
@@ -166,7 +178,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

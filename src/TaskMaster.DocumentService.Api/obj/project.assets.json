@@ -622,19 +622,19 @@
           }
         }
       },
-      "Microsoft.OpenApi/2.3.0": {
+      "Microsoft.OpenApi/3.0.1": {
         "type": "package",
         "dependencies": {
           "System.Text.Json": "8.0.5"
         },
         "compile": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
-            "related": ".pdb;.xml"
+            "related": ".pdb"
           }
         },
         "runtime": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
-            "related": ".pdb;.xml"
+            "related": ".pdb"
           }
         }
       },
@@ -1233,6 +1233,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "System.Text.Json": "10.0.0"
         },
         "compile": {
@@ -2398,21 +2400,19 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.OpenApi/2.3.0": {
-      "sha512": "5RZpjyt0JMmoc/aEgY9c1vE5pusdDGvkPl9qKIy9KFbRiIXD+w7gBJxX+unSjzzOcfgRoYxnO4okZyqDAL2WEw==",
+    "Microsoft.OpenApi/3.0.1": {
+      "sha512": "bEUxdaMrfX/1T/U0I9GOxi3nmZTlMZd+/rOPWVKnfIMlzV28VPXmLg7OiQvFa1ivOEruLSdZCUSc4KgroZZHpg==",
       "type": "package",
-      "path": "microsoft.openapi/2.3.0",
+      "path": "microsoft.openapi/3.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
         "lib/net8.0/Microsoft.OpenApi.dll",
         "lib/net8.0/Microsoft.OpenApi.pdb",
-        "lib/net8.0/Microsoft.OpenApi.xml",
         "lib/netstandard2.0/Microsoft.OpenApi.dll",
         "lib/netstandard2.0/Microsoft.OpenApi.pdb",
-        "lib/netstandard2.0/Microsoft.OpenApi.xml",
-        "microsoft.openapi.2.3.0.nupkg.sha512",
+        "microsoft.openapi.3.0.1.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
     },
@@ -3453,6 +3453,7 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.5",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.0",
+      "Microsoft.OpenApi >= 3.0.1",
       "Swashbuckle.AspNetCore >= 10.0.1",
       "TaskMaster.DocumentService.Core >= 1.0.0",
       "TaskMaster.DocumentService.Data >= 1.0.0",
@@ -3461,19 +3462,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/jasonberkes/.nuget/packages/": {}
+    "/home/claude/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj",
+      "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj",
       "projectName": "TaskMaster.DocumentService.Api",
-      "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj",
-      "packagesPath": "/Users/jasonberkes/.nuget/packages/",
-      "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/obj/",
+      "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj",
+      "packagesPath": "/home/claude/.nuget/packages/",
+      "outputPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
+        "/home/claude/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3485,17 +3486,17 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
             },
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
             },
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj"
             },
-            "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
-              "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
+            "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
+              "projectPath": "/workspace/TaskMaster.DocumentService-exec-1100/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
             }
           }
         }
@@ -3536,6 +3537,10 @@
             "target": "Package",
             "version": "[9.0.0, )"
           },
+          "Microsoft.OpenApi": {
+            "target": "Package",
+            "version": "[3.0.1, )"
+          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[10.0.1, )"
@@ -3558,7 +3563,7 @@
             "version": "[9.0.11, 9.0.11]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
             "version": "[9.0.11, 9.0.11]"
           },
           {
@@ -3574,7 +3579,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

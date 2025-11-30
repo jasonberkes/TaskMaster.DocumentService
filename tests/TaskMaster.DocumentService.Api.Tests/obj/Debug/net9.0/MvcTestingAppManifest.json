@@ -1,0 +1,7 @@
+{
+  "TaskMaster.DocumentService.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/workspace\/TaskMaster.DocumentService-exec-1100\/src\/TaskMaster.DocumentService.Api",
+  "TaskMaster.DocumentService.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/workspace\/TaskMaster.DocumentService-exec-1100\/src\/TaskMaster.DocumentService.Core",
+  "TaskMaster.DocumentService.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/workspace\/TaskMaster.DocumentService-exec-1100\/src\/TaskMaster.DocumentService.Data",
+  "TaskMaster.DocumentService.Processing, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/workspace\/TaskMaster.DocumentService-exec-1100\/src\/TaskMaster.DocumentService.Processing",
+  "TaskMaster.DocumentService.Search, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/workspace\/TaskMaster.DocumentService-exec-1100\/src\/TaskMaster.DocumentService.Search"
+}
