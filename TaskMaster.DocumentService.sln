@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskMaster.DocumentService.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskMaster.DocumentService.Api.Tests", "tests\TaskMaster.DocumentService.Api.Tests\TaskMaster.DocumentService.Api.Tests.csproj", "{F727AD48-0807-4614-B5C8-F630F6FD9400}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskMaster.DocumentService.SDK.Tests", "tests\TaskMaster.DocumentService.SDK.Tests\TaskMaster.DocumentService.SDK.Tests.csproj", "{E3E125EB-D809-476C-8440-9EC60536EC0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,18 @@ Global
 		{F727AD48-0807-4614-B5C8-F630F6FD9400}.Release|x64.Build.0 = Release|Any CPU
 		{F727AD48-0807-4614-B5C8-F630F6FD9400}.Release|x86.ActiveCfg = Release|Any CPU
 		{F727AD48-0807-4614-B5C8-F630F6FD9400}.Release|x86.Build.0 = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|x64.Build.0 = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3E125EB-D809-476C-8440-9EC60536EC0B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,5 +156,6 @@ Global
 		{6D149A1F-53D7-4394-A770-23D9E8A9AD52} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{5915702B-7847-4700-925E-63A5178EC553} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{F727AD48-0807-4614-B5C8-F630F6FD9400} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{E3E125EB-D809-476C-8440-9EC60536EC0B} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
