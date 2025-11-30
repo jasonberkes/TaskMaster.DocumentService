@@ -1,8 +1,13 @@
+using TaskMaster.DocumentService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Add Document Service Data layer (DbContext, Repositories, UnitOfWork)
+builder.Services.AddDocumentServiceData(builder.Configuration);
 
 var app = builder.Build();
 
