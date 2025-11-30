@@ -8,6 +8,8 @@ using TaskMaster.DocumentService.Api.Authorization;
 using TaskMaster.DocumentService.Core.Interfaces;
 using TaskMaster.DocumentService.Core.Services;
 using TaskMaster.DocumentService.Data;
+using TaskMaster.DocumentService.Search.Extensions;
+using TaskMaster.DocumentService.Search.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -112,6 +114,9 @@ builder.Services.AddControllers();
 // Add Document Service Data layer (DbContext, Repositories, UnitOfWork)
 builder.Services.AddDocumentServiceData(builder.Configuration);
 
+// Add Document Service Search layer (Meilisearch integration)
+builder.Services.AddDocumentServiceSearch(builder.Configuration);
+
 // Configure Blob Storage
 builder.Services.Configure<BlobStorageOptions>(
     builder.Configuration.GetSection(BlobStorageOptions.SectionName));
@@ -147,7 +152,10 @@ builder.Services.AddHealthChecks()
             ?? builder.Configuration["BlobStorage:ConnectionString"]
             ?? throw new InvalidOperationException("BlobStorage connection string is not configured."),
         name: "blob-storage",
-        tags: new[] { "storage", "blob" });
+        tags: new[] { "storage", "blob" })
+    .AddCheck<MeilisearchHealthCheck>(
+        name: "meilisearch",
+        tags: new[] { "search", "meilisearch" });
 
 var app = builder.Build();
 
