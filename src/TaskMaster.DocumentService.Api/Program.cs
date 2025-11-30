@@ -139,6 +139,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add Document Service (Business Logic Layer)
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<ICollectionService, CollectionService>();
 
 // Add health checks
 builder.Services.AddHealthChecks()

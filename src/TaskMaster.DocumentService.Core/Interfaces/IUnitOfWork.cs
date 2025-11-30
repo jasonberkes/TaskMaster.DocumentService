@@ -21,6 +21,11 @@ public interface IUnitOfWork : IDisposable
     IDocumentRepository Documents { get; }
 
     /// <summary>
+    /// Gets the collection repository.
+    /// </summary>
+    ICollectionRepository Collections { get; }
+
+    /// <summary>
     /// Saves all changes made in this context to the database.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
