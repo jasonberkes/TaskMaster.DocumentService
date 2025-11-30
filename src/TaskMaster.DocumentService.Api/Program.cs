@@ -31,6 +31,20 @@ builder.Services.AddSingleton(serviceProvider =>
 
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("DefaultConnection is not configured."),
+        name: "sql",
+        tags: new[] { "db", "sql", "sqlserver" })
+    .AddAzureBlobStorage(
+        connectionString: builder.Configuration.GetConnectionString("BlobStorage")
+            ?? builder.Configuration["BlobStorage:ConnectionString"]
+            ?? throw new InvalidOperationException("BlobStorage connection string is not configured."),
+        name: "blob-storage",
+        tags: new[] { "storage", "blob" });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,6 +54,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Map health check endpoint
+app.MapHealthChecks("/health");
 
 var summaries = new[]
 {
