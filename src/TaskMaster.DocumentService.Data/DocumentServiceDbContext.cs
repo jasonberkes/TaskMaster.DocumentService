@@ -43,6 +43,11 @@ public class DocumentServiceDbContext : DbContext
     public DbSet<CollectionDocument> CollectionDocuments => Set<CollectionDocument>();
 
     /// <summary>
+    /// Gets or sets the CodeReviews DbSet.
+    /// </summary>
+    public DbSet<CodeReview> CodeReviews => Set<CodeReview>();
+
+    /// <summary>
     /// Configures the entity models and relationships.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
@@ -320,6 +325,70 @@ public class DocumentServiceDbContext : DbContext
 
             entity.HasIndex(e => e.DocumentId)
                 .HasDatabaseName("IX_CollectionDocuments_DocumentId");
+        });
+
+        // Configure CodeReview entity (extension table for Document)
+        modelBuilder.Entity<CodeReview>(entity =>
+        {
+            entity.ToTable("CodeReviews");
+            entity.HasKey(e => e.DocumentId);
+
+            entity.Property(e => e.PullRequestNumber);
+
+            entity.Property(e => e.RepositoryName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.BranchName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.BaseBranchName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Author)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Reviewers)
+                .HasMaxLength(2000);
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.PullRequestUrl)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.CommitSha)
+                .HasMaxLength(64);
+
+            entity.Property(e => e.ApprovedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.MergedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.SourceBlobPath)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.MigratedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.Property(e => e.MigrationBatchId)
+                .HasMaxLength(100);
+
+            // Foreign key relationship with Document
+            entity.HasOne(e => e.Document)
+                .WithOne()
+                .HasForeignKey<CodeReview>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => e.PullRequestNumber)
+                .HasDatabaseName("IX_CodeReviews_PullRequestNumber");
+
+            entity.HasIndex(e => e.Status)
+                .HasDatabaseName("IX_CodeReviews_Status");
+
+            entity.HasIndex(e => e.MigrationBatchId)
+                .HasDatabaseName("IX_CodeReviews_MigrationBatchId");
         });
     }
 }

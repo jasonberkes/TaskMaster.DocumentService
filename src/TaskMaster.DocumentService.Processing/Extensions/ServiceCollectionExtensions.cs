@@ -38,6 +38,13 @@ public static class ServiceCollectionExtensions
         // Register background service
         services.AddHostedService<InboxProcessorBackgroundService>();
 
+        // Configure code review migration options
+        services.Configure<CodeReviewMigrationOptions>(
+            configuration.GetSection("CodeReviewMigration"));
+
+        // Register code review migration service
+        services.AddScoped<ICodeReviewMigrationService, CodeReviewMigrationService>();
+
         return services;
     }
 }

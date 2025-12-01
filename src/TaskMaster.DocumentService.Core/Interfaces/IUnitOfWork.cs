@@ -26,6 +26,11 @@ public interface IUnitOfWork : IDisposable
     ICollectionRepository Collections { get; }
 
     /// <summary>
+    /// Gets the code review repository.
+    /// </summary>
+    ICodeReviewRepository CodeReviews { get; }
+
+    /// <summary>
     /// Saves all changes made in this context to the database.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>

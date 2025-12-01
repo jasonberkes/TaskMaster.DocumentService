@@ -17,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
     private IDocumentTypeRepository? _documentTypes;
     private IDocumentRepository? _documents;
     private ICollectionRepository? _collections;
+    private ICodeReviewRepository? _codeReviews;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -64,6 +65,16 @@ public class UnitOfWork : IUnitOfWork
         {
             _collections ??= new CollectionRepository(_context);
             return _collections;
+        }
+    }
+
+    /// <inheritdoc/>
+    public ICodeReviewRepository CodeReviews
+    {
+        get
+        {
+            _codeReviews ??= new CodeReviewRepository(_context);
+            return _codeReviews;
         }
     }
 
