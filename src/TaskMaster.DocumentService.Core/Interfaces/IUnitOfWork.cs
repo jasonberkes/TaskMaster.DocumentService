@@ -26,6 +26,11 @@ public interface IUnitOfWork : IDisposable
     ICollectionRepository Collections { get; }
 
     /// <summary>
+    /// Gets the template repository.
+    /// </summary>
+    ITemplateRepository Templates { get; }
+
+    /// <summary>
     /// Gets the code review repository.
     /// </summary>
     ICodeReviewRepository CodeReviews { get; }

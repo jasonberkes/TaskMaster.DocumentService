@@ -43,6 +43,18 @@ public class DocumentServiceDbContext : DbContext
     public DbSet<CollectionDocument> CollectionDocuments => Set<CollectionDocument>();
 
     /// <summary>
+
+    /// <summary>
+    /// Gets or sets the DocumentTemplates DbSet.
+    /// </summary>
+    public DbSet<DocumentTemplate> DocumentTemplates => Set<DocumentTemplate>();
+
+    /// <summary>
+    /// Gets or sets the TemplateVariables DbSet.
+    /// </summary>
+    public DbSet<TemplateVariable> TemplateVariables => Set<TemplateVariable>();
+
+    /// <summary>
     /// Gets or sets the CodeReviews DbSet.
     /// </summary>
     public DbSet<CodeReview> CodeReviews => Set<CodeReview>();
@@ -327,6 +339,139 @@ public class DocumentServiceDbContext : DbContext
                 .HasDatabaseName("IX_CollectionDocuments_DocumentId");
         });
 
+
+        // Configure DocumentTemplate entity
+        modelBuilder.Entity<DocumentTemplate>(entity =>
+        {
+            entity.ToTable("DocumentTemplates");
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(2000);
+
+            entity.Property(e => e.Content)
+                .IsRequired();
+
+            entity.Property(e => e.MimeType)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasDefaultValue("text/plain");
+
+            entity.Property(e => e.FileExtension)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.DefaultTitlePattern)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.DefaultDescriptionPattern)
+                .HasMaxLength(2000);
+
+            entity.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            entity.HasIndex(e => e.IsDeleted)
+                .HasDatabaseName("IX_DocumentTemplates_IsDeleted");
+
+            entity.Property(e => e.DeletedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.DeletedReason)
+                .HasMaxLength(500);
+
+            entity.HasOne(e => e.Tenant)
+                .WithMany()
+                .HasForeignKey(e => e.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => e.TenantId)
+                .HasDatabaseName("IX_DocumentTemplates_TenantId");
+
+            entity.HasOne(e => e.DocumentType)
+                .WithMany()
+                .HasForeignKey(e => e.DocumentTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => new { e.Name, e.TenantId })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0")
+                .HasDatabaseName("IX_DocumentTemplates_Name_TenantId");
+        });
+
+        // Configure TemplateVariable entity
+        modelBuilder.Entity<TemplateVariable>(entity =>
+        {
+            entity.ToTable("TemplateVariables");
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.DisplayName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(1000);
+
+            entity.Property(e => e.DataType)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("string");
+
+            entity.Property(e => e.DefaultValue)
+                .HasMaxLength(1000);
+
+            entity.Property(e => e.IsRequired)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.ValidationPattern)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.ValidationMessage)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.SortOrder)
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.HasOne(e => e.Template)
+                .WithMany(e => e.Variables)
+                .HasForeignKey(e => e.TemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => e.TemplateId)
+                .HasDatabaseName("IX_TemplateVariables_TemplateId");
+
+            entity.HasIndex(e => new { e.Name, e.TemplateId })
+                .IsUnique()
+                .HasDatabaseName("IX_TemplateVariables_Name_TemplateId");
+        });
+
         // Configure CodeReview entity (extension table for Document)
         modelBuilder.Entity<CodeReview>(entity =>
         {
@@ -375,7 +520,6 @@ public class DocumentServiceDbContext : DbContext
             entity.Property(e => e.MigrationBatchId)
                 .HasMaxLength(100);
 
-            // Foreign key relationship with Document
             entity.HasOne(e => e.Document)
                 .WithOne()
                 .HasForeignKey<CodeReview>(e => e.DocumentId)
