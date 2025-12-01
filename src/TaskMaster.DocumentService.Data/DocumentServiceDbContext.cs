@@ -43,6 +43,8 @@ public class DocumentServiceDbContext : DbContext
     public DbSet<CollectionDocument> CollectionDocuments => Set<CollectionDocument>();
 
     /// <summary>
+
+    /// <summary>
     /// Gets or sets the DocumentTemplates DbSet.
     /// </summary>
     public DbSet<DocumentTemplate> DocumentTemplates => Set<DocumentTemplate>();
@@ -51,6 +53,11 @@ public class DocumentServiceDbContext : DbContext
     /// Gets or sets the TemplateVariables DbSet.
     /// </summary>
     public DbSet<TemplateVariable> TemplateVariables => Set<TemplateVariable>();
+
+    /// <summary>
+    /// Gets or sets the CodeReviews DbSet.
+    /// </summary>
+    public DbSet<CodeReview> CodeReviews => Set<CodeReview>();
 
     /// <summary>
     /// Configures the entity models and relationships.
@@ -332,6 +339,7 @@ public class DocumentServiceDbContext : DbContext
                 .HasDatabaseName("IX_CollectionDocuments_DocumentId");
         });
 
+
         // Configure DocumentTemplate entity
         modelBuilder.Entity<DocumentTemplate>(entity =>
         {
@@ -389,7 +397,6 @@ public class DocumentServiceDbContext : DbContext
             entity.Property(e => e.DeletedReason)
                 .HasMaxLength(500);
 
-            // Foreign key relationships
             entity.HasOne(e => e.Tenant)
                 .WithMany()
                 .HasForeignKey(e => e.TenantId)
@@ -452,7 +459,6 @@ public class DocumentServiceDbContext : DbContext
                 .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");
 
-            // Foreign key relationship
             entity.HasOne(e => e.Template)
                 .WithMany(e => e.Variables)
                 .HasForeignKey(e => e.TemplateId)
@@ -464,6 +470,69 @@ public class DocumentServiceDbContext : DbContext
             entity.HasIndex(e => new { e.Name, e.TemplateId })
                 .IsUnique()
                 .HasDatabaseName("IX_TemplateVariables_Name_TemplateId");
+        });
+
+        // Configure CodeReview entity (extension table for Document)
+        modelBuilder.Entity<CodeReview>(entity =>
+        {
+            entity.ToTable("CodeReviews");
+            entity.HasKey(e => e.DocumentId);
+
+            entity.Property(e => e.PullRequestNumber);
+
+            entity.Property(e => e.RepositoryName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.BranchName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.BaseBranchName)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Author)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Reviewers)
+                .HasMaxLength(2000);
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.PullRequestUrl)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.CommitSha)
+                .HasMaxLength(64);
+
+            entity.Property(e => e.ApprovedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.MergedBy)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.SourceBlobPath)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.MigratedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.Property(e => e.MigrationBatchId)
+                .HasMaxLength(100);
+
+            entity.HasOne(e => e.Document)
+                .WithOne()
+                .HasForeignKey<CodeReview>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => e.PullRequestNumber)
+                .HasDatabaseName("IX_CodeReviews_PullRequestNumber");
+
+            entity.HasIndex(e => e.Status)
+                .HasDatabaseName("IX_CodeReviews_Status");
+
+            entity.HasIndex(e => e.MigrationBatchId)
+                .HasDatabaseName("IX_CodeReviews_MigrationBatchId");
         });
     }
 }

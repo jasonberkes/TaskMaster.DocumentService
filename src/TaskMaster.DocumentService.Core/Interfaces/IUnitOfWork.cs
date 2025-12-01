@@ -31,6 +31,11 @@ public interface IUnitOfWork : IDisposable
     ITemplateRepository Templates { get; }
 
     /// <summary>
+    /// Gets the code review repository.
+    /// </summary>
+    ICodeReviewRepository CodeReviews { get; }
+
+    /// <summary>
     /// Saves all changes made in this context to the database.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
