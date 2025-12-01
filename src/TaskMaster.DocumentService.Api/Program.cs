@@ -8,6 +8,7 @@ using TaskMaster.DocumentService.Api.Authorization;
 using TaskMaster.DocumentService.Core.Interfaces;
 using TaskMaster.DocumentService.Core.Services;
 using TaskMaster.DocumentService.Data;
+using TaskMaster.DocumentService.Processing.Extensions;
 using TaskMaster.DocumentService.Search.Extensions;
 using TaskMaster.DocumentService.Search.HealthChecks;
 
@@ -117,6 +118,9 @@ builder.Services.AddDocumentServiceData(builder.Configuration);
 // Add Document Service Search layer (Meilisearch integration)
 builder.Services.AddDocumentServiceSearch(builder.Configuration);
 
+// Add Document Service Processing layer (Inbox Processor Background Service)
+builder.Services.AddDocumentServiceProcessing(builder.Configuration);
+
 // Configure Blob Storage
 builder.Services.Configure<BlobStorageOptions>(
     builder.Configuration.GetSection(BlobStorageOptions.SectionName));
@@ -139,6 +143,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add Document Service (Business Logic Layer)
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<ICollectionService, CollectionService>();
 
 // Add Template Service (Business Logic Layer)
 builder.Services.AddScoped<ITemplateService, TemplateService>();

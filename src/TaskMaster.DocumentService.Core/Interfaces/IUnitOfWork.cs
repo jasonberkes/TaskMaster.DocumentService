@@ -21,6 +21,11 @@ public interface IUnitOfWork : IDisposable
     IDocumentRepository Documents { get; }
 
     /// <summary>
+    /// Gets the collection repository.
+    /// </summary>
+    ICollectionRepository Collections { get; }
+
+    /// <summary>
     /// Gets the document template repository.
     /// </summary>
     IDocumentTemplateRepository DocumentTemplates { get; }
