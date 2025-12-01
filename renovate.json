@@ -1,0 +1,52 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    ":combinePatchMinorReleases"
+  ],
+  "schedule": ["before 3am on Monday"],
+  "timezone": "America/Chicago",
+  "labels": ["dependencies"],
+  "assignees": ["@jasonberkes"],
+  "reviewers": ["@jasonberkes"],
+  "prConcurrentLimit": 5,
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "description": "Auto-merge patch updates",
+      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "automerge": true,
+      "labels": ["dependencies", "auto-merge"]
+    },
+    {
+      "description": "Manual review for minor updates",
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "labels": ["dependencies", "minor-update"]
+    },
+    {
+      "description": "Manual review for major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "breaking-change"]
+    },
+    {
+      "description": "Security updates - auto-merge",
+      "vulnerabilityAlerts": {"enabled": true},
+      "automerge": true,
+      "prPriority": 10,
+      "labels": ["security", "auto-merge"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "automerge": true
+  },
+  "dependencyDashboard": true
+}
