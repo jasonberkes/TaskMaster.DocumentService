@@ -1,0 +1,120 @@
+# ============================================================================
+# Azure Pipeline for TaskMaster.DocumentService
+# ============================================================================
+# Document processing microservice for templates, storage, and content
+# Builds and tests .NET solution
+# ============================================================================
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/**'
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '9.0.x'
+
+stages:
+  # ============================================================================
+  # Stage 1: Build and Test
+  # ============================================================================
+  - stage: Build
+    displayName: 'Build & Test'
+    jobs:
+      - job: BuildTest
+        displayName: 'Build, Test, Analyze'
+        steps:
+          - checkout: self
+            fetchDepth: 0
+
+          # Setup .NET
+          - task: UseDotNet@2
+            displayName: 'Setup .NET SDK'
+            inputs:
+              version: '$(dotnetVersion)'
+
+          # Cache NuGet packages
+          - task: Cache@2
+            displayName: 'Cache NuGet packages'
+            inputs:
+              key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
+              restoreKeys: |
+                nuget | "$(Agent.OS)"
+              path: '$(Pipeline.Workspace)/.nuget/packages'
+
+          # Restore
+          - task: DotNetCoreCLI@2
+            displayName: 'Restore'
+            inputs:
+              command: 'restore'
+              projects: '**/*.csproj'
+
+          # Build
+          - task: DotNetCoreCLI@2
+            displayName: 'Build'
+            inputs:
+              command: 'build'
+              projects: '**/*.csproj'
+              arguments: '-c $(buildConfiguration) --no-restore'
+
+          # Test with coverage
+          - task: DotNetCoreCLI@2
+            displayName: 'Test'
+            inputs:
+              command: 'test'
+              projects: '**/tests/**/*.csproj'
+              arguments: '-c $(buildConfiguration) --no-build --collect:"XPlat Code Coverage" --logger trx'
+              publishTestResults: true
+
+          # Publish coverage
+          - task: PublishCodeCoverageResults@2
+            displayName: 'Publish Coverage'
+            inputs:
+              summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+
+  # ============================================================================
+  # Stage 2: Build Artifact (for future deployment)
+  # ============================================================================
+  - stage: Package
+    displayName: 'Package'
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: Publish
+        displayName: 'Publish Artifacts'
+        steps:
+          - checkout: self
+
+          - task: UseDotNet@2
+            displayName: 'Setup .NET SDK'
+            inputs:
+              version: '$(dotnetVersion)'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish API'
+            inputs:
+              command: 'publish'
+              publishWebProjects: false
+              projects: '**/TaskMaster.DocumentService.API.csproj'
+              arguments: '-c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/api'
+              zipAfterPublish: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'documentservice'
+              publishLocation: 'Container'
