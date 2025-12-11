@@ -81,24 +81,26 @@ stages:
           - task: Cache@2
             displayName: 'Cache NuGet packages'
             inputs:
-              key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
+              key: 'nuget | "$(Agent.OS)" | **/*.csproj'
               restoreKeys: |
                 nuget | "$(Agent.OS)"
               path: '$(Pipeline.Workspace)/.nuget/packages'
+            continueOnError: true
+
 
           # Restore
           - task: DotNetCoreCLI@2
             displayName: 'Restore'
             inputs:
               command: 'restore'
-              projects: '**/*.csproj'
+              projects: 'TaskMaster.DocumentService.sln'
 
           # Build
           - task: DotNetCoreCLI@2
             displayName: 'Build'
             inputs:
               command: 'build'
-              projects: '**/*.csproj'
+              projects: 'TaskMaster.DocumentService.sln'
               arguments: '-c $(buildConfiguration) --no-restore'
 
           # Test with coverage
