@@ -1,0 +1,296 @@
+# =============================================================================
+# Scheduled Deploy - DocumentService API
+# =============================================================================
+# Deploys DocumentService to Azure Container Apps at 2 AM CST daily
+# Uses blue/green deployment pattern with traffic shifting
+# =============================================================================
+
+name: Scheduled Deploy DocumentService
+
+on:
+  schedule:
+    # Run at 2:15 AM CST (7:15 AM UTC) - offset from Platform at 2:00 AM
+    - cron: '15 7 * * *'
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deploy even if no new image'
+        type: boolean
+        default: false
+      traffic_percentage:
+        description: 'Traffic % for new revision (blue/green)'
+        type: number
+        default: 100
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AZURE_RESOURCE_GROUP: 'tm-rg-prod-eus2'
+  AZURE_ACR_NAME: 'tmcrprodeus2'
+  IMAGE_NAME: 'documentservice-api'
+  CONTAINER_APP_NAME: 'tm-documentservice-prod-eus2'
+  API_BASE_URL: 'https://taskmaster-platform.thankfulsand-8986c25c.eastus2.azurecontainerapps.io'
+
+jobs:
+  check-for-updates:
+    name: Check for New Image
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+      latest_tag: ${{ steps.check.outputs.latest_tag }}
+      current_tag: ${{ steps.check.outputs.current_tag }}
+    
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Check for New Image
+        id: check
+        run: |
+          echo "🔍 Checking for new images in ACR..."
+          
+          # Get latest tag from ACR
+          LATEST_TAG=$(az acr repository show-tags \
+            --name ${{ env.AZURE_ACR_NAME }} \
+            --repository ${{ env.IMAGE_NAME }} \
+            --orderby time_desc \
+            --top 1 \
+            --output tsv 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "❌ No images found in ACR for ${{ env.IMAGE_NAME }}"
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Latest ACR tag: $LATEST_TAG"
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          
+          # Check if container app exists
+          APP_EXISTS=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "name" -o tsv 2>/dev/null || echo "")
+          
+          if [ -z "$APP_EXISTS" ]; then
+            echo "📦 Container app doesn't exist - will deploy"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "current_tag=none" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Get current deployed image tag
+          CURRENT_IMAGE=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "properties.template.containers[0].image" -o tsv)
+          
+          CURRENT_TAG=$(echo "$CURRENT_IMAGE" | sed 's/.*://')
+          echo "Currently deployed: $CURRENT_TAG"
+          echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+          
+          # Compare tags
+          if [ "$LATEST_TAG" = "$CURRENT_TAG" ]; then
+            if [ "${{ inputs.force_deploy }}" = "true" ]; then
+              echo "✅ Force deploy requested"
+              echo "should_deploy=true" >> $GITHUB_OUTPUT
+            else
+              echo "✅ Already running latest version"
+              echo "should_deploy=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "🚀 New version available!"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    name: Blue/Green Deploy
+    needs: check-for-updates
+    if: needs.check-for-updates.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Check Maintenance Mode
+        id: maintenance
+        run: |
+          echo "🔧 Checking maintenance mode..."
+          
+          MAINTENANCE=$(curl -s -w "%{http_code}" -o /tmp/maintenance.json \
+            "${{ env.API_BASE_URL }}/api/v1/system/maintenance" \
+            -H "X-API-Key: ${{ secrets.TASKMASTER_API_KEY }}" || echo "000")
+          
+          if [ "$MAINTENANCE" = "200" ]; then
+            IS_ENABLED=$(cat /tmp/maintenance.json | jq -r '.isEnabled // false')
+            if [ "$IS_ENABLED" = "true" ]; then
+              echo "⚠️ Maintenance mode is enabled, skipping deployment"
+              echo "skip=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Deploy New Revision
+        if: steps.maintenance.outputs.skip != 'true'
+        id: deploy
+        run: |
+          set -e
+          
+          IMAGE="${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.check-for-updates.outputs.latest_tag }}"
+          REVISION_SUFFIX="deploy-$(date +%Y%m%d%H%M%S)"
+          TRAFFIC_WEIGHT="${{ inputs.traffic_percentage || 100 }}"
+          
+          echo "=========================================="
+          echo "Deploying DocumentService"
+          echo "Image: $IMAGE"
+          echo "Revision: $REVISION_SUFFIX"
+          echo "Traffic: $TRAFFIC_WEIGHT%"
+          echo "=========================================="
+          
+          # Check if app exists
+          APP_EXISTS=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "name" -o tsv 2>/dev/null || echo "")
+          
+          if [ -z "$APP_EXISTS" ]; then
+            echo "📦 Creating new Container App via Bicep..."
+            
+            az deployment group create \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file infrastructure/bicep/container-app.bicep \
+              --parameters \
+                environment=prod \
+                containerImage="$IMAGE" \
+                revisionSuffix="$REVISION_SUFFIX" \
+                newRevisionTrafficWeight=$TRAFFIC_WEIGHT \
+                minReplicas=1 \
+                maxReplicas=5
+          else
+            echo "🔄 Updating existing Container App..."
+            
+            # Create new revision
+            az containerapp update \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --image "$IMAGE" \
+              --revision-suffix "$REVISION_SUFFIX"
+            
+            # Get the new revision name
+            sleep 10
+            NEW_REVISION=$(az containerapp revision list \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --query "[?properties.active].name | [0]" -o tsv)
+            
+            echo "New revision: $NEW_REVISION"
+            
+            # Set traffic (blue/green)
+            if [ "$TRAFFIC_WEIGHT" = "100" ]; then
+              az containerapp ingress traffic set \
+                --name ${{ env.CONTAINER_APP_NAME }} \
+                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+                --revision-weight "$NEW_REVISION=100"
+            else
+              # Get old revision
+              OLD_REVISION=$(az containerapp revision list \
+                --name ${{ env.CONTAINER_APP_NAME }} \
+                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+                --query "[?properties.trafficWeight > 0 && name != '$NEW_REVISION'].name | [0]" -o tsv)
+              
+              OLD_WEIGHT=$((100 - TRAFFIC_WEIGHT))
+              az containerapp ingress traffic set \
+                --name ${{ env.CONTAINER_APP_NAME }} \
+                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+                --revision-weight "$NEW_REVISION=$TRAFFIC_WEIGHT" "$OLD_REVISION=$OLD_WEIGHT"
+            fi
+          fi
+          
+          echo "revision=$REVISION_SUFFIX" >> $GITHUB_OUTPUT
+
+      - name: Health Check
+        if: steps.maintenance.outputs.skip != 'true'
+        run: |
+          echo "🏥 Waiting for health check..."
+          sleep 30
+          
+          APP_URL="https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
+          MAX_ATTEMPTS=10
+          ATTEMPT=0
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$APP_URL/health" || echo "000")
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Health check passed!"
+              exit 0
+            fi
+            
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: HTTP $HTTP_CODE"
+            sleep 10
+          done
+          
+          echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
+          exit 1
+
+      - name: Record Deployment
+        if: steps.maintenance.outputs.skip != 'true'
+        run: |
+          echo "📝 Recording deployment..."
+          
+          curl -X POST "${{ env.API_BASE_URL }}/api/v1/versions" \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${{ secrets.TASKMASTER_API_KEY }}" \
+            -d "{
+              \"appName\": \"${{ env.IMAGE_NAME }}\",
+              \"version\": \"${{ needs.check-for-updates.outputs.latest_tag }}\",
+              \"commitSha\": \"${{ github.sha }}\",
+              \"imageTag\": \"${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.check-for-updates.outputs.latest_tag }}\",
+              \"buildNumber\": \"${{ github.run_number }}\",
+              \"releasedBy\": \"GitHub Actions Scheduled\",
+              \"releaseNotes\": \"Scheduled deployment\"
+            }" || echo "Warning: Failed to record deployment"
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          echo "=========================================="
+          echo "Deployment Summary"
+          echo "=========================================="
+          echo "App: ${{ env.CONTAINER_APP_NAME }}"
+          echo "Previous: ${{ needs.check-for-updates.outputs.current_tag }}"
+          echo "Deployed: ${{ needs.check-for-updates.outputs.latest_tag }}"
+          echo "URL: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
+          echo "=========================================="
+
+  notify-skip:
+    name: Notify Skip
+    needs: check-for-updates
+    if: needs.check-for-updates.outputs.should_deploy == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Skip
+        run: |
+          echo "✅ No deployment needed"
+          echo "Current version: ${{ needs.check-for-updates.outputs.current_tag }}"
+          echo "Latest available: ${{ needs.check-for-updates.outputs.latest_tag }}"

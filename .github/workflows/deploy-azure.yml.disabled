@@ -1,3 +1,13 @@
+# =============================================================================
+# DISABLED: Replaced by scheduled-deploy.yml (Epic #30)
+# =============================================================================
+# This workflow deployed on every push to main, which could disrupt service.
+# DocumentService now uses the Platform pattern:
+# - ADO builds on merge (azure-pipelines.yml)
+# - GitHub Actions deploys at 2:15 AM CST (scheduled-deploy.yml)
+# - Manual deploy available (manual-deploy.yml)
+# =============================================================================
+
 name: Deploy to Azure Container Apps
 
 on:

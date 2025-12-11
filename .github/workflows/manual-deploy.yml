@@ -1,0 +1,149 @@
+# =============================================================================
+# Manual Deploy - DocumentService API
+# =============================================================================
+# On-demand deployment for emergencies or specific versions
+# =============================================================================
+
+name: Manual Deploy DocumentService
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag to deploy (default: latest)'
+        required: false
+        default: 'latest'
+      traffic_percentage:
+        description: 'Traffic % for new revision (0-100 for blue/green)'
+        required: false
+        default: '100'
+      skip_health_check:
+        description: 'Skip health check after deploy'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AZURE_RESOURCE_GROUP: 'tm-rg-prod-eus2'
+  AZURE_ACR_NAME: 'tmcrprodeus2'
+  IMAGE_NAME: 'documentservice-api'
+  CONTAINER_APP_NAME: 'tm-documentservice-prod-eus2'
+
+jobs:
+  deploy:
+    name: Deploy DocumentService
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get Image Tag
+        id: tag
+        run: |
+          TAG="${{ inputs.image_tag }}"
+          
+          if [ "$TAG" = "latest" ] || [ -z "$TAG" ]; then
+            TAG=$(az acr repository show-tags \
+              --name ${{ env.AZURE_ACR_NAME }} \
+              --repository ${{ env.IMAGE_NAME }} \
+              --orderby time_desc \
+              --top 1 \
+              --output tsv)
+          fi
+          
+          echo "Using tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy
+        run: |
+          set -e
+          
+          IMAGE="${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}"
+          REVISION_SUFFIX="manual-$(date +%Y%m%d%H%M%S)"
+          TRAFFIC_WEIGHT="${{ inputs.traffic_percentage }}"
+          
+          echo "=========================================="
+          echo "Manual Deploy DocumentService"
+          echo "Image: $IMAGE"
+          echo "Traffic: $TRAFFIC_WEIGHT%"
+          echo "=========================================="
+          
+          # Check if app exists
+          APP_EXISTS=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "name" -o tsv 2>/dev/null || echo "")
+          
+          if [ -z "$APP_EXISTS" ]; then
+            echo "📦 Creating Container App via Bicep..."
+            
+            az deployment group create \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file infrastructure/bicep/container-app.bicep \
+              --parameters \
+                environment=prod \
+                containerImage="$IMAGE" \
+                revisionSuffix="$REVISION_SUFFIX" \
+                newRevisionTrafficWeight=$TRAFFIC_WEIGHT
+          else
+            echo "🔄 Updating Container App..."
+            
+            az containerapp update \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --image "$IMAGE" \
+              --revision-suffix "$REVISION_SUFFIX"
+            
+            sleep 10
+            
+            # Set traffic
+            NEW_REVISION=$(az containerapp revision list \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --query "[?properties.active].name | [0]" -o tsv)
+            
+            if [ "$TRAFFIC_WEIGHT" = "100" ]; then
+              az containerapp ingress traffic set \
+                --name ${{ env.CONTAINER_APP_NAME }} \
+                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+                --revision-weight "$NEW_REVISION=100"
+            fi
+          fi
+
+      - name: Health Check
+        if: ${{ inputs.skip_health_check != true }}
+        run: |
+          echo "🏥 Running health check..."
+          sleep 30
+          
+          APP_URL="https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$APP_URL/health" || echo "000")
+          
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check returned HTTP $HTTP_CODE"
+          fi
+
+      - name: Summary
+        run: |
+          echo "=========================================="
+          echo "✅ Deployment Complete"
+          echo "=========================================="
+          echo "Tag: ${{ steps.tag.outputs.tag }}"
+          echo "URL: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
+          echo "=========================================="
