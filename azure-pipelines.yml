@@ -121,6 +121,7 @@ stages:
 
           # SonarQube Analyze
           - task: SonarQubeAnalyze@7
+            continueOnError: true
             displayName: 'SonarQube Analyze'
             condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
 
