@@ -76,7 +76,6 @@ stages:
               extraProperties: |
                 sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
                 sonar.coverage.exclusions=**/Migrations/**,**/wwwroot/**
-                sonar.branch.name=
 
           # Cache NuGet packages
           - task: Cache@2
@@ -119,11 +118,23 @@ stages:
             inputs:
               summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
+          # ============================================================================
+          # Remove branch.name for SonarQube Community Edition
+          # Community Edition does not support branch analysis, but the Azure DevOps
+          # extension automatically adds sonar.branch.name. This script removes it.
+          # ============================================================================
+          - script: |
+              FILTERED_PARAMS=$(echo $SONARQUBE_SCANNER_PARAMS | sed 's/"sonar.branch.name":"[^"]*"\,//g')
+              echo "##vso[task.setvariable variable=SONARQUBE_SCANNER_PARAMS]$FILTERED_PARAMS"
+            displayName: 'Remove branch.name for SonarQube CE'
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
           # SonarQube Analyze
           - task: SonarQubeAnalyze@7
-            continueOnError: true
-            displayName: 'SonarQube Analyze'
+            displayName: 'Run SonarQube Code Analysis'
             condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+            inputs:
+              jdkversion: 'JAVA_HOME_17_X64'
 
           # SonarQube Publish
           - task: SonarQubePublish@7
