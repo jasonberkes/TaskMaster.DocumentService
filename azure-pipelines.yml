@@ -31,7 +31,7 @@ variables:
   - name: buildConfiguration
     value: 'Release'
   - name: dotnetVersion
-    value: '9.0.x'
+    value: '10.0.x'
   - name: acrName
     value: 'tmcrprodeus2'
   - name: imageName

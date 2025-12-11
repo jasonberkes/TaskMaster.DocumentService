@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {}
+    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {}
   },
   "projects": {
-    "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
         "projectName": "TaskMaster.DocumentService.Core",
-        "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
-        "packagesPath": "/home/claude/.nuget/packages/",
-        "outputPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/obj/",
+        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
+        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/claude/.nuget/NuGet/NuGet.Config"
+          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -87,21 +87,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
+    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj",
+        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj",
         "projectName": "TaskMaster.DocumentService.Data",
-        "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj",
-        "packagesPath": "/home/claude/.nuget/packages/",
-        "outputPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/obj/",
+        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj",
+        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
+        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/claude/.nuget/NuGet/NuGet.Config"
+          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -113,8 +113,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-                "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
               }
             }
           }
@@ -172,21 +172,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {
+    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
+        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
         "projectName": "TaskMaster.DocumentService.Processing",
-        "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
-        "packagesPath": "/home/claude/.nuget/packages/",
-        "outputPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Processing/obj/",
+        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
+        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
+        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/claude/.nuget/NuGet/NuGet.Config"
+          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -198,14 +198,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-                "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
               },
-              "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
-                "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
+              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj": {
+                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/TaskMaster.DocumentService.Data.csproj"
               },
-              "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
-                "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
+              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
+                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj"
               }
             }
           }
@@ -236,7 +236,7 @@
             },
             "Microsoft.Extensions.Hosting.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[9.0.5, )"
             },
             "PdfPig": {
               "target": "Package",
@@ -269,21 +269,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
+    "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
+        "projectUniqueName": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
         "projectName": "TaskMaster.DocumentService.Search",
-        "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
-        "packagesPath": "/home/claude/.nuget/packages/",
-        "outputPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Search/obj/",
+        "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.csproj",
+        "packagesPath": "/Users/jasonberkes/.nuget/packages/",
+        "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/claude/.nuget/NuGet/NuGet.Config"
+          "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -295,8 +295,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
-                "projectPath": "/workspace/TaskMaster.DocumentService-exec-2318/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
+              "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj": {
+                "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj"
               }
             }
           }
@@ -323,19 +323,19 @@
             },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[9.0.5, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[9.0.5, )"
             },
             "Microsoft.Extensions.Diagnostics.HealthChecks": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[9.0.5, )"
             },
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[9.0.5, )"
             }
           },
           "imports": [
@@ -364,7 +364,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
