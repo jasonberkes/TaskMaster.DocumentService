@@ -34,4 +34,15 @@ public class MeilisearchOptions
     /// Gets or sets the timeout in seconds for search operations.
     /// </summary>
     public int SearchTimeoutSeconds { get; set; } = 5;
+
+    /// <summary>
+    /// Gets or sets whether background indexing is enabled.
+    /// When enabled, a background service will periodically index documents that were missed or failed.
+    /// </summary>
+    public bool BackgroundIndexingEnabled { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the interval in minutes between background indexing cycles.
+    /// </summary>
+    public int BackgroundIndexingIntervalMinutes { get; set; } = 5;
 }

@@ -14,6 +14,7 @@ public class DocumentService : IDocumentService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IBlobStorageService _blobStorageService;
+    private readonly IDocumentIndexer? _documentIndexer;
     private readonly ILogger<DocumentService> _logger;
     private readonly BlobStorageOptions _blobStorageOptions;
 
@@ -24,16 +25,19 @@ public class DocumentService : IDocumentService
     /// <param name="blobStorageService">The blob storage service.</param>
     /// <param name="logger">The logger instance.</param>
     /// <param name="blobStorageOptions">The blob storage configuration options.</param>
+    /// <param name="documentIndexer">Optional document indexer for search integration.</param>
     public DocumentService(
         IUnitOfWork unitOfWork,
         IBlobStorageService blobStorageService,
         ILogger<DocumentService> logger,
-        IOptions<BlobStorageOptions> blobStorageOptions)
+        IOptions<BlobStorageOptions> blobStorageOptions,
+        IDocumentIndexer? documentIndexer = null)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _blobStorageOptions = blobStorageOptions?.Value ?? throw new ArgumentNullException(nameof(blobStorageOptions));
+        _documentIndexer = documentIndexer; // Optional - null if search not configured
     }
 
     /// <inheritdoc/>
@@ -122,6 +126,33 @@ public class DocumentService : IDocumentService
 
             await _unitOfWork.Documents.AddAsync(document, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Index document for search if indexer is configured and document type is indexable
+            if (_documentIndexer != null && documentType.IsContentIndexed)
+            {
+                try
+                {
+                    var meilisearchId = await _documentIndexer.IndexDocumentAsync(document, cancellationToken);
+                    if (!string.IsNullOrEmpty(meilisearchId))
+                    {
+                        document.MeilisearchId = meilisearchId;
+                        document.LastIndexedAt = DateTime.UtcNow;
+                        _unitOfWork.Documents.Update(document);
+                        await _unitOfWork.SaveChangesAsync(cancellationToken);
+                        
+                        _logger.LogInformation(
+                            "Document {DocumentId} indexed with MeilisearchId {MeilisearchId}",
+                            document.Id, meilisearchId);
+                    }
+                }
+                catch (Exception indexEx)
+                {
+                    // Log but don't fail document creation if indexing fails
+                    _logger.LogWarning(indexEx, 
+                        "Failed to index document {DocumentId}, will be retried by background service",
+                        document.Id);
+                }
+            }
 
             _logger.LogInformation(
                 "Successfully created document {DocumentId} with title '{Title}'",

@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TaskMaster.DocumentService.Core.Interfaces;
+using TaskMaster.DocumentService.Search.BackgroundServices;
 using TaskMaster.DocumentService.Search.Configuration;
+using TaskMaster.DocumentService.Search.HealthChecks;
 using TaskMaster.DocumentService.Search.Interfaces;
 using TaskMaster.DocumentService.Search.Services;
 
@@ -37,6 +40,16 @@ public static class ServiceCollectionExtensions
 
         // Register search service
         services.AddSingleton<ISearchService, MeilisearchService>();
+        
+        // Register document indexer for Core layer to use
+        services.AddSingleton<IDocumentIndexer, DocumentIndexer>();
+
+        // Register health check
+        services.AddHealthChecks()
+            .AddCheck<MeilisearchHealthCheck>("meilisearch");
+
+        // Register background indexing service
+        services.AddHostedService<DocumentIndexingBackgroundService>();
 
         return services;
     }
@@ -66,6 +79,16 @@ public static class ServiceCollectionExtensions
 
         // Register search service
         services.AddSingleton<ISearchService, MeilisearchService>();
+        
+        // Register document indexer for Core layer to use
+        services.AddSingleton<IDocumentIndexer, DocumentIndexer>();
+
+        // Register health check
+        services.AddHealthChecks()
+            .AddCheck<MeilisearchHealthCheck>("meilisearch");
+
+        // Register background indexing service
+        services.AddHostedService<DocumentIndexingBackgroundService>();
 
         return services;
     }
