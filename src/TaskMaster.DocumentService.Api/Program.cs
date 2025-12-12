@@ -143,6 +143,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add Document Service (Business Logic Layer)
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentTypeService, DocumentTypeService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 
