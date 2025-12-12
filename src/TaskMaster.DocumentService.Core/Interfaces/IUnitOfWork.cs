@@ -59,4 +59,16 @@ public interface IUnitOfWork : IDisposable
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Executes an operation within a transaction using the database execution strategy.
+    /// This method should be used when the execution strategy (e.g., SqlServerRetryingExecutionStrategy) is enabled.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result returned by the operation.</typeparam>
+    /// <param name="operation">The operation to execute within a transaction.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The result of the operation.</returns>
+    Task<TResult> ExecuteInTransactionAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> operation,
+        CancellationToken cancellationToken = default);
 }

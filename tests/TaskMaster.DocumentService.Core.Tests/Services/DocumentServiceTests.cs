@@ -427,6 +427,14 @@ public class DocumentServiceTests
         _mockDocumentRepository.Setup(x => x.AddAsync(It.IsAny<Document>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Document doc, CancellationToken ct) => { doc.Id = 2; return doc; });
 
+        // Setup ExecuteInTransactionAsync to execute the operation immediately
+        _mockUnitOfWork
+            .Setup(x => x.ExecuteInTransactionAsync(
+                It.IsAny<Func<CancellationToken, Task<Document>>>(),
+                It.IsAny<CancellationToken>()))
+            .Returns<Func<CancellationToken, Task<Document>>, CancellationToken>(
+                (operation, ct) => operation(ct));
+
         // Act
         var result = await _documentService.CreateDocumentVersionAsync(
             parentDocumentId, content, fileName, contentType, updatedBy);
@@ -438,8 +446,9 @@ public class DocumentServiceTests
         Assert.True(result.IsCurrentVersion);
         Assert.Equal(updatedBy, result.CreatedBy);
 
-        _mockUnitOfWork.Verify(x => x.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _mockUnitOfWork.Verify(x => x.CommitTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _mockUnitOfWork.Verify(x => x.ExecuteInTransactionAsync(
+            It.IsAny<Func<CancellationToken, Task<Document>>>(),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -461,13 +470,20 @@ public class DocumentServiceTests
         _mockDocumentRepository.Setup(x => x.GetByIdAsync(parentDocumentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(parentDocument);
 
+        // Setup ExecuteInTransactionAsync to execute the operation immediately
+        _mockUnitOfWork
+            .Setup(x => x.ExecuteInTransactionAsync(
+                It.IsAny<Func<CancellationToken, Task<Document>>>(),
+                It.IsAny<CancellationToken>()))
+            .Returns<Func<CancellationToken, Task<Document>>, CancellationToken>(
+                (operation, ct) => operation(ct));
+
         // Act
         var result = await _documentService.CreateDocumentVersionAsync(
             parentDocumentId, content, "file.txt", "text/plain", "user");
 
         // Assert
         Assert.Equal(parentDocument.Id, result.Id);
-        _mockUnitOfWork.Verify(x => x.RollbackTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
         _mockDocumentRepository.Verify(x => x.AddAsync(It.IsAny<Document>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -480,6 +496,14 @@ public class DocumentServiceTests
 
         _mockDocumentRepository.Setup(x => x.GetByIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(parentDocument);
+
+        // Setup ExecuteInTransactionAsync to execute the operation immediately
+        _mockUnitOfWork
+            .Setup(x => x.ExecuteInTransactionAsync(
+                It.IsAny<Func<CancellationToken, Task<Document>>>(),
+                It.IsAny<CancellationToken>()))
+            .Returns<Func<CancellationToken, Task<Document>>, CancellationToken>(
+                (operation, ct) => operation(ct));
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
@@ -735,6 +759,14 @@ public class DocumentServiceTests
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
+        // Setup ExecuteInTransactionAsync to execute the operation immediately
+        _mockUnitOfWork
+            .Setup(x => x.ExecuteInTransactionAsync(
+                It.IsAny<Func<CancellationToken, Task<bool>>>(),
+                It.IsAny<CancellationToken>()))
+            .Returns<Func<CancellationToken, Task<bool>>, CancellationToken>(
+                (operation, ct) => operation(ct));
+
         // Act
         await _documentService.PermanentlyDeleteDocumentAsync(documentId);
 
@@ -742,8 +774,9 @@ public class DocumentServiceTests
         _mockBlobStorageService.Verify(x => x.DeleteAsync(
             _options.DefaultContainerName, document.BlobPath, It.IsAny<CancellationToken>()), Times.Once);
         _mockDocumentRepository.Verify(x => x.Remove(document), Times.Once);
-        _mockUnitOfWork.Verify(x => x.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _mockUnitOfWork.Verify(x => x.CommitTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _mockUnitOfWork.Verify(x => x.ExecuteInTransactionAsync(
+            It.IsAny<Func<CancellationToken, Task<bool>>>(),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -752,6 +785,14 @@ public class DocumentServiceTests
         // Arrange
         _mockDocumentRepository.Setup(x => x.GetByIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Document?)null);
+
+        // Setup ExecuteInTransactionAsync to execute the operation immediately
+        _mockUnitOfWork
+            .Setup(x => x.ExecuteInTransactionAsync(
+                It.IsAny<Func<CancellationToken, Task<bool>>>(),
+                It.IsAny<CancellationToken>()))
+            .Returns<Func<CancellationToken, Task<bool>>, CancellationToken>(
+                (operation, ct) => operation(ct));
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
