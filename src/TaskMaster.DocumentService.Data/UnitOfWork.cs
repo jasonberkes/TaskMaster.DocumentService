@@ -137,6 +137,41 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
+    /// <inheritdoc/>
+    public async Task<TResult> ExecuteInTransactionAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> operation,
+        CancellationToken cancellationToken = default)
+    {
+        // Create an execution strategy that will retry on transient failures
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        return await strategy.ExecuteAsync(
+            state: operation,
+            operation: async (context, op, ct) =>
+            {
+                // Begin a new transaction within the execution strategy
+                await using var transaction = await context.Database.BeginTransactionAsync(ct);
+
+                try
+                {
+                    // Execute the operation
+                    var result = await op(ct);
+
+                    // Commit the transaction
+                    await transaction.CommitAsync(ct);
+
+                    return result;
+                }
+                catch
+                {
+                    // Transaction will be rolled back automatically on dispose
+                    throw;
+                }
+            },
+            verifySucceeded: null,
+            cancellationToken: cancellationToken);
+    }
+
     /// <summary>
     /// Disposes the unit of work and associated resources.
     /// </summary>

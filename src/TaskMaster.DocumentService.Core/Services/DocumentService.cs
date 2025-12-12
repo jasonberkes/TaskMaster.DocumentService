@@ -290,102 +290,101 @@ public class DocumentService : IDocumentService
                 "Creating new version for document {ParentDocumentId} by user {UpdatedBy}",
                 parentDocumentId, updatedBy);
 
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
-            // Get parent document
-            var parentDocument = await _unitOfWork.Documents.GetByIdAsync(parentDocumentId, cancellationToken);
-            if (parentDocument == null)
-            {
-                throw new InvalidOperationException($"Parent document with ID {parentDocumentId} not found.");
-            }
-
-            if (parentDocument.IsDeleted)
-            {
-                throw new InvalidOperationException($"Cannot create version of deleted document {parentDocumentId}.");
-            }
-
-            // Calculate content hash and file size
+            // Calculate content hash and file size before entering the transaction
             var contentHash = await ComputeContentHashAsync(content, cancellationToken);
             var fileSize = content.Length;
             content.Position = 0; // Reset stream position
 
-            // Check if content is the same as current version
-            if (contentHash == parentDocument.ContentHash)
+            // Execute the versioning logic within an execution strategy to support retry on transient failures
+            return await _unitOfWork.ExecuteInTransactionAsync(async (ct) =>
             {
-                _logger.LogWarning(
-                    "New version has same content hash as parent document {ParentDocumentId}. Skipping version creation.",
-                    parentDocumentId);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return parentDocument;
-            }
+                // Get parent document
+                var parentDocument = await _unitOfWork.Documents.GetByIdAsync(parentDocumentId, ct);
+                if (parentDocument == null)
+                {
+                    throw new InvalidOperationException($"Parent document with ID {parentDocumentId} not found.");
+                }
 
-            // Get the highest version number
-            var versions = await _unitOfWork.Documents.GetVersionsAsync(parentDocumentId, cancellationToken);
-            var maxVersion = versions.Any() ? versions.Max(v => v.Version) : parentDocument.Version;
-            var newVersionNumber = maxVersion + 1;
+                if (parentDocument.IsDeleted)
+                {
+                    throw new InvalidOperationException($"Cannot create version of deleted document {parentDocumentId}.");
+                }
 
-            // Generate unique blob name for new version
-            var blobName = GenerateBlobName(parentDocument.TenantId, fileName, newVersionNumber);
+                // Check if content is the same as current version
+                if (contentHash == parentDocument.ContentHash)
+                {
+                    _logger.LogWarning(
+                        "New version has same content hash as parent document {ParentDocumentId}. Skipping version creation.",
+                        parentDocumentId);
+                    return parentDocument;
+                }
 
-            // Upload to blob storage
-            var blobUri = await _blobStorageService.UploadAsync(
-                _blobStorageOptions.DefaultContainerName,
-                blobName,
-                content,
-                contentType,
-                cancellationToken);
+                // Get the highest version number
+                var versions = await _unitOfWork.Documents.GetVersionsAsync(parentDocumentId, ct);
+                var maxVersion = versions.Any() ? versions.Max(v => v.Version) : parentDocument.Version;
+                var newVersionNumber = maxVersion + 1;
 
-            // Mark all previous versions as not current
-            var currentVersion = await _unitOfWork.Documents.GetCurrentVersionAsync(parentDocumentId, cancellationToken);
-            if (currentVersion != null)
-            {
-                currentVersion.IsCurrentVersion = false;
-                _unitOfWork.Documents.Update(currentVersion);
-            }
+                // Generate unique blob name for new version
+                var blobName = GenerateBlobName(parentDocument.TenantId, fileName, newVersionNumber);
 
-            // Also mark parent as not current
-            parentDocument.IsCurrentVersion = false;
-            _unitOfWork.Documents.Update(parentDocument);
+                // Upload to blob storage
+                var blobUri = await _blobStorageService.UploadAsync(
+                    _blobStorageOptions.DefaultContainerName,
+                    blobName,
+                    content,
+                    contentType,
+                    ct);
 
-            // Create new version
-            var newVersion = new Document
-            {
-                TenantId = parentDocument.TenantId,
-                DocumentTypeId = parentDocument.DocumentTypeId,
-                Title = parentDocument.Title,
-                Description = parentDocument.Description,
-                BlobPath = blobName,
-                ContentHash = contentHash,
-                FileSizeBytes = fileSize,
-                MimeType = contentType,
-                OriginalFileName = fileName,
-                Metadata = parentDocument.Metadata,
-                Tags = parentDocument.Tags,
-                Version = newVersionNumber,
-                ParentDocumentId = parentDocumentId,
-                IsCurrentVersion = true,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = updatedBy,
-                UpdatedAt = DateTime.UtcNow,
-                UpdatedBy = updatedBy,
-                IsDeleted = false,
-                IsArchived = false
-            };
+                // Mark all previous versions as not current
+                var currentVersion = await _unitOfWork.Documents.GetCurrentVersionAsync(parentDocumentId, ct);
+                if (currentVersion != null)
+                {
+                    currentVersion.IsCurrentVersion = false;
+                    _unitOfWork.Documents.Update(currentVersion);
+                }
 
-            await _unitOfWork.Documents.AddAsync(newVersion, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                // Also mark parent as not current
+                parentDocument.IsCurrentVersion = false;
+                _unitOfWork.Documents.Update(parentDocument);
 
-            _logger.LogInformation(
-                "Successfully created version {Version} for document {ParentDocumentId}",
-                newVersionNumber, parentDocumentId);
+                // Create new version
+                var newVersion = new Document
+                {
+                    TenantId = parentDocument.TenantId,
+                    DocumentTypeId = parentDocument.DocumentTypeId,
+                    Title = parentDocument.Title,
+                    Description = parentDocument.Description,
+                    BlobPath = blobName,
+                    ContentHash = contentHash,
+                    FileSizeBytes = fileSize,
+                    MimeType = contentType,
+                    OriginalFileName = fileName,
+                    Metadata = parentDocument.Metadata,
+                    Tags = parentDocument.Tags,
+                    Version = newVersionNumber,
+                    ParentDocumentId = parentDocumentId,
+                    IsCurrentVersion = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = updatedBy,
+                    UpdatedAt = DateTime.UtcNow,
+                    UpdatedBy = updatedBy,
+                    IsDeleted = false,
+                    IsArchived = false
+                };
 
-            return newVersion;
+                await _unitOfWork.Documents.AddAsync(newVersion, ct);
+                await _unitOfWork.SaveChangesAsync(ct);
+
+                _logger.LogInformation(
+                    "Successfully created version {Version} for document {ParentDocumentId}",
+                    newVersionNumber, parentDocumentId);
+
+                return newVersion;
+            }, cancellationToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create version for document {ParentDocumentId}", parentDocumentId);
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             throw;
         }
     }
@@ -589,38 +588,40 @@ public class DocumentService : IDocumentService
         {
             _logger.LogWarning("Permanently deleting document {DocumentId}", documentId);
 
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
-            var document = await _unitOfWork.Documents.GetByIdAsync(documentId, cancellationToken);
-            if (document == null)
+            // Execute the deletion logic within an execution strategy to support retry on transient failures
+            await _unitOfWork.ExecuteInTransactionAsync(async (ct) =>
             {
-                throw new InvalidOperationException($"Document with ID {documentId} not found.");
-            }
+                var document = await _unitOfWork.Documents.GetByIdAsync(documentId, ct);
+                if (document == null)
+                {
+                    throw new InvalidOperationException($"Document with ID {documentId} not found.");
+                }
 
-            // Delete from blob storage
-            var blobDeleted = await _blobStorageService.DeleteAsync(
-                _blobStorageOptions.DefaultContainerName,
-                document.BlobPath,
-                cancellationToken);
+                // Delete from blob storage
+                var blobDeleted = await _blobStorageService.DeleteAsync(
+                    _blobStorageOptions.DefaultContainerName,
+                    document.BlobPath,
+                    ct);
 
-            if (!blobDeleted)
-            {
-                _logger.LogWarning(
-                    "Blob {BlobPath} for document {DocumentId} was not found in storage",
-                    document.BlobPath, documentId);
-            }
+                if (!blobDeleted)
+                {
+                    _logger.LogWarning(
+                        "Blob {BlobPath} for document {DocumentId} was not found in storage",
+                        document.BlobPath, documentId);
+                }
 
-            // Delete from database
-            _unitOfWork.Documents.Remove(document);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                // Delete from database
+                _unitOfWork.Documents.Remove(document);
+                await _unitOfWork.SaveChangesAsync(ct);
 
-            _logger.LogWarning("Successfully permanently deleted document {DocumentId}", documentId);
+                _logger.LogWarning("Successfully permanently deleted document {DocumentId}", documentId);
+
+                return true; // Return a value to satisfy the generic return type
+            }, cancellationToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to permanently delete document {DocumentId}", documentId);
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             throw;
         }
     }
