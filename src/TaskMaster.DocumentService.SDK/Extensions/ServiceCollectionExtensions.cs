@@ -95,6 +95,12 @@ public static class ServiceCollectionExtensions
             return client.Tenants;
         });
 
+        services.AddScoped<ISearchClient>(sp =>
+        {
+            var client = sp.GetRequiredService<IDocumentServiceClient>();
+            return client.Search;
+        });
+
         return services;
     }
 }

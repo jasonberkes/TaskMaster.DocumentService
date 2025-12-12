@@ -19,4 +19,9 @@ public interface IDocumentServiceClient : IDisposable
     /// Gets the tenants client for tenant operations.
     /// </summary>
     ITenantsClient Tenants { get; }
+
+    /// <summary>
+    /// Gets the search client for document search operations.
+    /// </summary>
+    ISearchClient Search { get; }
 }

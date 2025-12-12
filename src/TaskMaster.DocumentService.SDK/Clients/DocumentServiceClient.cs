@@ -11,6 +11,7 @@ public class DocumentServiceClient : IDocumentServiceClient
     private readonly Lazy<IDocumentsClient> _documentsClient;
     private readonly Lazy<IDocumentTypesClient> _documentTypesClient;
     private readonly Lazy<ITenantsClient> _tenantsClient;
+    private readonly Lazy<ISearchClient> _searchClient;
     private bool _disposed;
 
     /// <summary>
@@ -24,6 +25,7 @@ public class DocumentServiceClient : IDocumentServiceClient
         _documentsClient = new Lazy<IDocumentsClient>(() => new DocumentsClient(_httpClient));
         _documentTypesClient = new Lazy<IDocumentTypesClient>(() => new DocumentTypesClient(_httpClient));
         _tenantsClient = new Lazy<ITenantsClient>(() => new TenantsClient(_httpClient));
+        _searchClient = new Lazy<ISearchClient>(() => new SearchClient(_httpClient));
     }
 
     /// <inheritdoc/>
@@ -34,6 +36,9 @@ public class DocumentServiceClient : IDocumentServiceClient
 
     /// <inheritdoc/>
     public ITenantsClient Tenants => _tenantsClient.Value;
+
+    /// <inheritdoc/>
+    public ISearchClient Search => _searchClient.Value;
 
     /// <summary>
     /// Disposes the client and releases resources.
