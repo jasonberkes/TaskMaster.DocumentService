@@ -2,15 +2,15 @@
 # Scheduled Deploy - DocumentService API
 # =============================================================================
 # Deploys DocumentService to Azure Container Apps at 2 AM CST daily
-# Uses blue/green deployment pattern with traffic shifting
+# Uses proper blue/green deployment pattern with health checks before traffic switch
 # =============================================================================
 
 name: Scheduled Deploy DocumentService
 
 on:
   schedule:
-    # Run at 2:15 AM CST (7:15 AM UTC) - offset from Platform at 2:00 AM
-    - cron: '15 7 * * *'
+    # Run at 2:15 AM CST (8:15 AM UTC) - offset from Platform at 2:00 AM
+    - cron: '15 8 * * *'
   workflow_dispatch:
     inputs:
       force_deploy:
@@ -31,6 +31,7 @@ env:
   AZURE_ACR_NAME: 'tmcrprodeus2'
   IMAGE_NAME: 'documentservice-api'
   CONTAINER_APP_NAME: 'tm-documentservice-prod-eus2'
+  APP_URL: 'https://tm-documentservice-prod-eus2.thankfulsand-8986c25c.eastus2.azurecontainerapps.io'
   API_BASE_URL: 'https://taskmaster-platform.thankfulsand-8986c25c.eastus2.azurecontainerapps.io'
 
 jobs:
@@ -85,13 +86,23 @@ jobs:
             exit 0
           fi
           
-          # Get current deployed image tag
-          CURRENT_IMAGE=$(az containerapp show \
+          # Get current deployed image tag from the revision with traffic
+          CURRENT_REVISION=$(az containerapp ingress traffic show \
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query "properties.template.containers[0].image" -o tsv)
+            --query "[?weight > 0].revisionName | [0]" -o tsv 2>/dev/null || echo "")
           
-          CURRENT_TAG=$(echo "$CURRENT_IMAGE" | sed 's/.*://')
+          if [ -n "$CURRENT_REVISION" ]; then
+            CURRENT_IMAGE=$(az containerapp revision show \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision "$CURRENT_REVISION" \
+              --query "properties.template.containers[0].image" -o tsv 2>/dev/null || echo "")
+            CURRENT_TAG=$(echo "$CURRENT_IMAGE" | sed 's/.*://')
+          else
+            CURRENT_TAG="unknown"
+          fi
+          
           echo "Currently deployed: $CURRENT_TAG"
           echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
           
@@ -116,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io
+      url: ${{ env.APP_URL }}
     
     steps:
       - name: Checkout
@@ -129,28 +140,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Check Maintenance Mode
-        id: maintenance
-        run: |
-          echo "🔧 Checking maintenance mode..."
-          
-          MAINTENANCE=$(curl -s -w "%{http_code}" -o /tmp/maintenance.json \
-            "${{ env.API_BASE_URL }}/api/v1/system/maintenance" \
-            -H "X-API-Key: ${{ secrets.TASKMASTER_API_KEY }}" || echo "000")
-          
-          if [ "$MAINTENANCE" = "200" ]; then
-            IS_ENABLED=$(cat /tmp/maintenance.json | jq -r '.isEnabled // false')
-            if [ "$IS_ENABLED" = "true" ]; then
-              echo "⚠️ Maintenance mode is enabled, skipping deployment"
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-          fi
-          
-          echo "skip=false" >> $GITHUB_OUTPUT
-
       - name: Deploy New Revision
-        if: steps.maintenance.outputs.skip != 'true'
         id: deploy
         run: |
           set -e
@@ -165,6 +155,15 @@ jobs:
           echo "Revision: $REVISION_SUFFIX"
           echo "Traffic: $TRAFFIC_WEIGHT%"
           echo "=========================================="
+          
+          # Get current revision with traffic (for potential rollback)
+          OLD_REVISION=$(az containerapp ingress traffic show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "[?weight > 0].revisionName | [0]" -o tsv 2>/dev/null || echo "")
+          
+          echo "old_revision=$OLD_REVISION" >> $GITHUB_OUTPUT
+          echo "Current revision: $OLD_REVISION"
           
           # Check if app exists
           APP_EXISTS=$(az containerapp show \
@@ -182,115 +181,175 @@ jobs:
                 environment=prod \
                 containerImage="$IMAGE" \
                 revisionSuffix="$REVISION_SUFFIX" \
-                newRevisionTrafficWeight=$TRAFFIC_WEIGHT \
+                newRevisionTrafficWeight=0 \
                 minReplicas=1 \
                 maxReplicas=5
           else
-            echo "🔄 Updating existing Container App..."
+            echo "🔄 Deploying new revision..."
             
-            # Create new revision
+            # Deploy new revision (traffic stays on old revision)
             az containerapp update \
               --name ${{ env.CONTAINER_APP_NAME }} \
               --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
               --image "$IMAGE" \
               --revision-suffix "$REVISION_SUFFIX"
-            
-            # Get the new revision name
-            sleep 10
-            NEW_REVISION=$(az containerapp revision list \
-              --name ${{ env.CONTAINER_APP_NAME }} \
-              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-              --query "[?properties.active].name | [0]" -o tsv)
-            
-            echo "New revision: $NEW_REVISION"
-            
-            # Set traffic (blue/green)
-            if [ "$TRAFFIC_WEIGHT" = "100" ]; then
-              az containerapp ingress traffic set \
-                --name ${{ env.CONTAINER_APP_NAME }} \
-                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-                --revision-weight "$NEW_REVISION=100"
-            else
-              # Get old revision
-              OLD_REVISION=$(az containerapp revision list \
-                --name ${{ env.CONTAINER_APP_NAME }} \
-                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-                --query "[?properties.trafficWeight > 0 && name != '$NEW_REVISION'].name | [0]" -o tsv)
-              
-              OLD_WEIGHT=$((100 - TRAFFIC_WEIGHT))
-              az containerapp ingress traffic set \
-                --name ${{ env.CONTAINER_APP_NAME }} \
-                --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-                --revision-weight "$NEW_REVISION=$TRAFFIC_WEIGHT" "$OLD_REVISION=$OLD_WEIGHT"
-            fi
           fi
           
-          echo "revision=$REVISION_SUFFIX" >> $GITHUB_OUTPUT
+          # Wait for revision to be created
+          sleep 15
+          
+          # Get the NEW revision by sorting by creation time (newest first)
+          NEW_REVISION=$(az containerapp revision list \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "sort_by(@, &properties.createdTime) | reverse(@) | [0].name" -o tsv)
+          
+          echo "new_revision=$NEW_REVISION" >> $GITHUB_OUTPUT
+          echo "New revision: $NEW_REVISION"
+          
+          # Wait for revision to be ready
+          echo "⏳ Waiting for revision to be ready..."
+          MAX_WAIT=120
+          WAITED=0
+          while [ $WAITED -lt $MAX_WAIT ]; do
+            HEALTH=$(az containerapp revision show \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision "$NEW_REVISION" \
+              --query "properties.healthState" -o tsv 2>/dev/null || echo "Unknown")
+            
+            RUNNING=$(az containerapp revision show \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision "$NEW_REVISION" \
+              --query "properties.runningState" -o tsv 2>/dev/null || echo "Unknown")
+            
+            echo "  Health: $HEALTH, Running: $RUNNING"
+            
+            if [ "$HEALTH" = "Healthy" ] && [ "$RUNNING" = "Running" ]; then
+              echo "✅ Revision is healthy and running!"
+              break
+            fi
+            
+            if [ "$HEALTH" = "Unhealthy" ] || [ "$RUNNING" = "Failed" ]; then
+              echo "❌ Revision failed to start!"
+              echo "revision_healthy=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+            
+            sleep 10
+            WAITED=$((WAITED + 10))
+          done
+          
+          if [ $WAITED -ge $MAX_WAIT ]; then
+            echo "❌ Timeout waiting for revision to be ready"
+            echo "revision_healthy=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "revision_healthy=true" >> $GITHUB_OUTPUT
 
       - name: Health Check
-        if: steps.maintenance.outputs.skip != 'true'
+        if: steps.deploy.outputs.revision_healthy == 'true'
+        id: health
         run: |
-          echo "🏥 Waiting for health check..."
-          sleep 30
+          echo "🏥 Running health check on new revision..."
           
-          APP_URL="https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
           MAX_ATTEMPTS=10
           ATTEMPT=0
           
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$APP_URL/health" || echo "000")
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+              "${{ env.APP_URL }}/health" \
+              --max-time 10 || echo "000")
             
             if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ Health check passed!"
+              echo "healthy=true" >> $GITHUB_OUTPUT
               exit 0
             fi
             
             ATTEMPT=$((ATTEMPT + 1))
             echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: HTTP $HTTP_CODE"
-            sleep 10
+            sleep 5
           done
           
           echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
+          echo "healthy=false" >> $GITHUB_OUTPUT
           exit 1
 
-      - name: Record Deployment
-        if: steps.maintenance.outputs.skip != 'true'
+      - name: Switch Traffic
+        if: steps.health.outputs.healthy == 'true'
         run: |
-          echo "📝 Recording deployment..."
+          TRAFFIC_WEIGHT="${{ inputs.traffic_percentage || 100 }}"
+          NEW_REVISION="${{ steps.deploy.outputs.new_revision }}"
+          OLD_REVISION="${{ steps.deploy.outputs.old_revision }}"
           
-          curl -X POST "${{ env.API_BASE_URL }}/api/v1/versions" \
-            -H "Content-Type: application/json" \
-            -H "X-API-Key: ${{ secrets.TASKMASTER_API_KEY }}" \
-            -d "{
-              \"appName\": \"${{ env.IMAGE_NAME }}\",
-              \"version\": \"${{ needs.check-for-updates.outputs.latest_tag }}\",
-              \"commitSha\": \"${{ github.sha }}\",
-              \"imageTag\": \"${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.check-for-updates.outputs.latest_tag }}\",
-              \"buildNumber\": \"${{ github.run_number }}\",
-              \"releasedBy\": \"GitHub Actions Scheduled\",
-              \"releaseNotes\": \"Scheduled deployment\"
-            }" || echo "Warning: Failed to record deployment"
+          echo "🔀 Switching traffic to new revision..."
+          
+          if [ "$TRAFFIC_WEIGHT" = "100" ]; then
+            az containerapp ingress traffic set \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision-weight "$NEW_REVISION=100"
+            echo "✅ 100% traffic now on $NEW_REVISION"
+          else
+            OLD_WEIGHT=$((100 - TRAFFIC_WEIGHT))
+            az containerapp ingress traffic set \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision-weight "$NEW_REVISION=$TRAFFIC_WEIGHT" "$OLD_REVISION=$OLD_WEIGHT"
+            echo "✅ Traffic split: $NEW_REVISION=$TRAFFIC_WEIGHT%, $OLD_REVISION=$OLD_WEIGHT%"
+          fi
 
-      - name: Deployment Summary
+      - name: Cleanup Old Revisions
         if: always()
         run: |
-          echo "=========================================="
-          echo "Deployment Summary"
-          echo "=========================================="
-          echo "App: ${{ env.CONTAINER_APP_NAME }}"
-          echo "Previous: ${{ needs.check-for-updates.outputs.current_tag }}"
-          echo "Deployed: ${{ needs.check-for-updates.outputs.latest_tag }}"
-          echo "URL: https://${{ env.CONTAINER_APP_NAME }}.thankfulsand-8986c25c.eastus2.azurecontainerapps.io"
-          echo "=========================================="
+          echo "🧹 Cleaning up old revisions (keeping 3 most recent)..."
+          
+          # Get all revisions sorted by creation time, skip the 3 newest
+          OLD_REVISIONS=$(az containerapp revision list \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "sort_by(@, &properties.createdTime) | reverse(@) | [3:].name" -o tsv)
+          
+          if [ -z "$OLD_REVISIONS" ]; then
+            echo "No old revisions to clean up"
+            exit 0
+          fi
+          
+          for REV in $OLD_REVISIONS; do
+            echo "Deactivating: $REV"
+            az containerapp revision deactivate \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --revision "$REV" 2>/dev/null || true
+          done
+          
+          echo "✅ Cleanup complete"
 
-  notify-skip:
-    name: Notify Skip
-    needs: check-for-updates
-    if: needs.check-for-updates.outputs.should_deploy == 'false'
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Image | ${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.check-for-updates.outputs.latest_tag }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| New Revision | ${{ steps.deploy.outputs.new_revision }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Old Revision | ${{ steps.deploy.outputs.old_revision }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Traffic | ${{ inputs.traffic_percentage || 100 }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Revision Healthy | ${{ steps.deploy.outputs.revision_healthy }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Health Check | ${{ steps.health.outputs.healthy || 'failed' }} |" >> $GITHUB_STEP_SUMMARY
+
+  notify:
+    name: Notify on Failure
+    needs: [check-for-updates, deploy]
+    if: failure()
     runs-on: ubuntu-latest
     steps:
-      - name: Log Skip
+      - name: Report Failure
         run: |
-          echo "✅ No deployment needed"
-          echo "Current version: ${{ needs.check-for-updates.outputs.current_tag }}"
-          echo "Latest available: ${{ needs.check-for-updates.outputs.latest_tag }}"
+          echo "❌ Deployment failed!"
+          echo "Check the workflow logs for details."
+          # TODO: Add Slack/email notification here
