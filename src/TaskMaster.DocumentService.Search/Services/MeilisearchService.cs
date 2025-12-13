@@ -44,8 +44,18 @@ public class MeilisearchService : ISearchService
         {
             _logger.LogInformation("Initializing Meilisearch index: {IndexName}", _options.IndexName);
 
-            var index = _client.Index(_options.IndexName);
+            // Ensure index exists with correct primary key (lowercase 'id' to match JSON serialization)
+            try
+            {
+                await _client.CreateIndexAsync(_options.IndexName, "id");
+                _logger.LogInformation("Created Meilisearch index: {IndexName}", _options.IndexName);
+            }
+            catch (Meilisearch.MeilisearchApiError ex) when (ex.Message.Contains("already exists"))
+            {
+                _logger.LogDebug("Meilisearch index {IndexName} already exists", _options.IndexName);
+            }
 
+            var index = _client.Index(_options.IndexName);
             // Configure searchable attributes (fields that can be searched)
             await index.UpdateSearchableAttributesAsync(new[]
             {
@@ -121,7 +131,7 @@ public class MeilisearchService : ISearchService
             var searchableDoc = MapToSearchableDocument(document);
             var index = _client.Index(_options.IndexName);
 
-            await index.AddDocumentsAsync(new[] { searchableDoc }, primaryKey: nameof(SearchableDocument.Id), cancellationToken);
+            await index.AddDocumentsAsync(new[] { searchableDoc }, primaryKey: "id", cancellationToken);
 
             _logger.LogInformation("Successfully indexed document {DocumentId} with Meilisearch ID {MeilisearchId}",
                 document.Id, searchableDoc.Id);
@@ -164,7 +174,7 @@ public class MeilisearchService : ISearchService
 
             foreach (var batch in batches)
             {
-                await index.AddDocumentsAsync(batch, primaryKey: nameof(SearchableDocument.Id), cancellationToken);
+                await index.AddDocumentsAsync(batch, primaryKey: "id", cancellationToken);
 
                 foreach (var doc in batch)
                 {
@@ -196,7 +206,7 @@ public class MeilisearchService : ISearchService
             var searchableDoc = MapToSearchableDocument(document);
             var index = _client.Index(_options.IndexName);
 
-            await index.UpdateDocumentsAsync(new[] { searchableDoc }, primaryKey: nameof(SearchableDocument.Id), cancellationToken);
+            await index.UpdateDocumentsAsync(new[] { searchableDoc }, primaryKey: "id", cancellationToken);
 
             _logger.LogInformation("Successfully updated document {DocumentId} in Meilisearch", document.Id);
         }
