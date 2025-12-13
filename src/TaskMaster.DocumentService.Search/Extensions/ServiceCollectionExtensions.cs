@@ -44,9 +44,6 @@ public static class ServiceCollectionExtensions
         // Register document indexer for Core layer to use
         services.AddSingleton<IDocumentIndexer, DocumentIndexer>();
 
-        // Register health check
-        services.AddHealthChecks()
-            .AddCheck<MeilisearchHealthCheck>("meilisearch");
 
         // Register background indexing service
         services.AddHostedService<DocumentIndexingBackgroundService>();
@@ -83,9 +80,6 @@ public static class ServiceCollectionExtensions
         // Register document indexer for Core layer to use
         services.AddSingleton<IDocumentIndexer, DocumentIndexer>();
 
-        // Register health check
-        services.AddHealthChecks()
-            .AddCheck<MeilisearchHealthCheck>("meilisearch");
 
         // Register background indexing service
         services.AddHostedService<DocumentIndexingBackgroundService>();
