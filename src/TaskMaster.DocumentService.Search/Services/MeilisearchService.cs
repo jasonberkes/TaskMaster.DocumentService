@@ -37,6 +37,14 @@ public class MeilisearchService : ISearchService
         _client = new MeilisearchClient(_options.Url, _options.ApiKey);
     }
 
+    /// <summary>
+    /// Converts a property name to camelCase for Meilisearch compatibility.
+    /// </summary>
+    private static string ToCamelCase(string name)
+    {
+        return string.IsNullOrEmpty(name) ? name : char.ToLowerInvariant(name[0]) + name.Substring(1);
+    }
+
     /// <inheritdoc/>
     public async Task InitializeIndexAsync(CancellationToken cancellationToken = default)
     {
@@ -59,54 +67,54 @@ public class MeilisearchService : ISearchService
             // Configure searchable attributes (fields that can be searched)
             await index.UpdateSearchableAttributesAsync(new[]
             {
-                nameof(SearchableDocument.Title),
-                nameof(SearchableDocument.Description),
-                nameof(SearchableDocument.ExtractedText),
-                nameof(SearchableDocument.OriginalFileName),
-                nameof(SearchableDocument.Tags),
-                nameof(SearchableDocument.Metadata)
+                ToCamelCase(nameof(SearchableDocument.Title)),
+                ToCamelCase(nameof(SearchableDocument.Description)),
+                ToCamelCase(nameof(SearchableDocument.ExtractedText)),
+                ToCamelCase(nameof(SearchableDocument.OriginalFileName)),
+                ToCamelCase(nameof(SearchableDocument.Tags)),
+                ToCamelCase(nameof(SearchableDocument.Metadata))
             });
 
             // Configure filterable attributes (fields that can be used in filters)
             await index.UpdateFilterableAttributesAsync(new[]
             {
-                nameof(SearchableDocument.TenantId),
-                nameof(SearchableDocument.DocumentTypeId),
-                nameof(SearchableDocument.MimeType),
-                nameof(SearchableDocument.IsCurrentVersion),
-                nameof(SearchableDocument.CreatedAt),
-                nameof(SearchableDocument.UpdatedAt),
-                nameof(SearchableDocument.Tags)
+                ToCamelCase(nameof(SearchableDocument.TenantId)),
+                ToCamelCase(nameof(SearchableDocument.DocumentTypeId)),
+                ToCamelCase(nameof(SearchableDocument.MimeType)),
+                ToCamelCase(nameof(SearchableDocument.IsCurrentVersion)),
+                ToCamelCase(nameof(SearchableDocument.CreatedAt)),
+                ToCamelCase(nameof(SearchableDocument.UpdatedAt)),
+                ToCamelCase(nameof(SearchableDocument.Tags))
             });
 
             // Configure sortable attributes
             await index.UpdateSortableAttributesAsync(new[]
             {
-                nameof(SearchableDocument.CreatedAt),
-                nameof(SearchableDocument.UpdatedAt),
-                nameof(SearchableDocument.Title),
-                nameof(SearchableDocument.FileSizeBytes)
+                ToCamelCase(nameof(SearchableDocument.CreatedAt)),
+                ToCamelCase(nameof(SearchableDocument.UpdatedAt)),
+                ToCamelCase(nameof(SearchableDocument.Title)),
+                ToCamelCase(nameof(SearchableDocument.FileSizeBytes))
             });
 
             // Configure displayed attributes (fields returned in search results)
             await index.UpdateDisplayedAttributesAsync(new[]
             {
-                nameof(SearchableDocument.Id),
-                nameof(SearchableDocument.DocumentId),
-                nameof(SearchableDocument.TenantId),
-                nameof(SearchableDocument.DocumentTypeId),
-                nameof(SearchableDocument.Title),
-                nameof(SearchableDocument.Description),
-                nameof(SearchableDocument.OriginalFileName),
-                nameof(SearchableDocument.MimeType),
-                nameof(SearchableDocument.Tags),
-                nameof(SearchableDocument.FileSizeBytes),
-                nameof(SearchableDocument.Version),
-                nameof(SearchableDocument.IsCurrentVersion),
-                nameof(SearchableDocument.CreatedAt),
-                nameof(SearchableDocument.CreatedBy),
-                nameof(SearchableDocument.UpdatedAt),
-                nameof(SearchableDocument.UpdatedBy)
+                ToCamelCase(nameof(SearchableDocument.Id)),
+                ToCamelCase(nameof(SearchableDocument.DocumentId)),
+                ToCamelCase(nameof(SearchableDocument.TenantId)),
+                ToCamelCase(nameof(SearchableDocument.DocumentTypeId)),
+                ToCamelCase(nameof(SearchableDocument.Title)),
+                ToCamelCase(nameof(SearchableDocument.Description)),
+                ToCamelCase(nameof(SearchableDocument.OriginalFileName)),
+                ToCamelCase(nameof(SearchableDocument.MimeType)),
+                ToCamelCase(nameof(SearchableDocument.Tags)),
+                ToCamelCase(nameof(SearchableDocument.FileSizeBytes)),
+                ToCamelCase(nameof(SearchableDocument.Version)),
+                ToCamelCase(nameof(SearchableDocument.IsCurrentVersion)),
+                ToCamelCase(nameof(SearchableDocument.CreatedAt)),
+                ToCamelCase(nameof(SearchableDocument.CreatedBy)),
+                ToCamelCase(nameof(SearchableDocument.UpdatedAt)),
+                ToCamelCase(nameof(SearchableDocument.UpdatedBy))
             });
 
             _logger.LogInformation("Successfully initialized Meilisearch index: {IndexName}", _options.IndexName);
@@ -291,39 +299,39 @@ public class MeilisearchService : ISearchService
 
             if (searchRequest.TenantId.HasValue)
             {
-                filters.Add($"{nameof(SearchableDocument.TenantId)} = {searchRequest.TenantId.Value}");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.TenantId))} = {searchRequest.TenantId.Value}");
             }
 
             if (searchRequest.DocumentTypeId.HasValue)
             {
-                filters.Add($"{nameof(SearchableDocument.DocumentTypeId)} = {searchRequest.DocumentTypeId.Value}");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.DocumentTypeId))} = {searchRequest.DocumentTypeId.Value}");
             }
 
             if (!string.IsNullOrEmpty(searchRequest.MimeType))
             {
-                filters.Add($"{nameof(SearchableDocument.MimeType)} = \"{searchRequest.MimeType}\"");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.MimeType))} = \"{searchRequest.MimeType}\"");
             }
 
             if (searchRequest.OnlyCurrentVersion)
             {
-                filters.Add($"{nameof(SearchableDocument.IsCurrentVersion)} = true");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.IsCurrentVersion))} = true");
             }
 
             if (searchRequest.CreatedFrom.HasValue)
             {
                 var timestamp = new DateTimeOffset(searchRequest.CreatedFrom.Value).ToUnixTimeSeconds();
-                filters.Add($"{nameof(SearchableDocument.CreatedAt)} >= {timestamp}");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.CreatedAt))} >= {timestamp}");
             }
 
             if (searchRequest.CreatedTo.HasValue)
             {
                 var timestamp = new DateTimeOffset(searchRequest.CreatedTo.Value).ToUnixTimeSeconds();
-                filters.Add($"{nameof(SearchableDocument.CreatedAt)} <= {timestamp}");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.CreatedAt))} <= {timestamp}");
             }
 
             if (!string.IsNullOrEmpty(searchRequest.Tags))
             {
-                filters.Add($"{nameof(SearchableDocument.Tags)} = \"{searchRequest.Tags}\"");
+                filters.Add($"{ToCamelCase(nameof(SearchableDocument.Tags))} = \"{searchRequest.Tags}\"");
             }
 
             if (filters.Any())
