@@ -59,10 +59,12 @@ az containerapp ingress traffic set \
 
 | Workflow | Trigger | Description |
 |----------|---------|-------------|
-| `scheduled-deploy.yml` | Daily 2:15 AM CST | Auto-deploy if new image exists |
-| `manual-deploy.yml` | Manual | On-demand deployment |
-| `build-test.yml` | Push to main/develop | Build and test only |
-| `release.yml` | Tag v* | Create GitHub release |
+| `cd-deploy-docservice-scheduled.yml` | Daily 2:15 AM CST | Auto-deploy if new image exists |
+| `cd-deploy-docservice-manual.yml` | Manual | On-demand deployment |
+| `ci-build-test.yml` | Push to main/develop | Build and test only |
+| `cd-release.yml` | Tag v* | Create GitHub release |
+| `compliance-tech-stack.yml` | PR/push to main | Tech stack validation |
+| `utility-auto-rebase.yml` | Push to main | Auto-rebase open PRs |
 
 ## Environment
 

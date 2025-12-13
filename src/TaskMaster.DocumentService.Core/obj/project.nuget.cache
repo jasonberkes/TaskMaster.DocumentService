@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1Iw2Ufm6XSI=",
+  "dgSpecHash": "N1j1i+0mekY=",
   "success": true,
   "projectFilePath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
   "expectedPackageFiles": [
@@ -8,18 +8,27 @@
     "/Users/jasonberkes/.nuget/packages/azure.storage.blobs/12.26.0/azure.storage.blobs.12.26.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/azure.storage.common/12.25.0/azure.storage.common.12.25.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.bcl.asyncinterfaces/8.0.0/microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.0/microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.0/microsoft.extensions.logging.abstractions.9.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options/9.0.0/microsoft.extensions.options.9.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.primitives/9.0.0/microsoft.extensions.primitives.9.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.0/microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.0/microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options/10.0.0/microsoft.extensions.options.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.primitives/10.0.0/microsoft.extensions.primitives.10.0.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.clientmodel/1.6.1/system.clientmodel.1.6.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.io.hashing/8.0.0/system.io.hashing.8.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/system.io.pipelines/10.0.0/system.io.pipelines.10.0.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.memory.data/8.0.1/system.memory.data.8.0.1.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/system.text.encodings.web/10.0.0/system.text.encodings.web.10.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.netcore.app.ref/9.0.11/microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.11/microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
+    "/Users/jasonberkes/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference System.Text.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "projectPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
+      "libraryId": "System.Text.Json",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

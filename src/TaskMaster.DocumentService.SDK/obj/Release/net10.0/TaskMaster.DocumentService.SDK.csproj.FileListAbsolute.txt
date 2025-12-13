@@ -1,0 +1,13 @@
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.csproj.AssemblyReference.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.AssemblyInfoInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.AssemblyInfo.cs
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.csproj.CoreCompileInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.sourcelink.json
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/bin/Release/net10.0/TaskMaster.DocumentService.SDK.deps.json
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/bin/Release/net10.0/TaskMaster.DocumentService.SDK.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/bin/Release/net10.0/TaskMaster.DocumentService.SDK.pdb
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/refint/TaskMaster.DocumentService.SDK.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/TaskMaster.DocumentService.SDK.pdb
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.SDK/obj/Release/net10.0/ref/TaskMaster.DocumentService.SDK.dll

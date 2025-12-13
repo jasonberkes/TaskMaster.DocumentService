@@ -1,0 +1,13 @@
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/bin/Debug/net10.0/TaskMaster.DocumentService.Core.deps.json
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/bin/Debug/net10.0/TaskMaster.DocumentService.Core.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/bin/Debug/net10.0/TaskMaster.DocumentService.Core.pdb
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.csproj.AssemblyReference.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.AssemblyInfoInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.AssemblyInfo.cs
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.csproj.CoreCompileInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.sourcelink.json
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/refint/TaskMaster.DocumentService.Core.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/TaskMaster.DocumentService.Core.pdb
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/Debug/net10.0/ref/TaskMaster.DocumentService.Core.dll

@@ -1,0 +1,81 @@
+# =============================================================================
+# Technology Stack Compliance Check
+# =============================================================================
+# Ensures DocumentService follows C#/.NET technology standards
+# =============================================================================
+
+name: Technology Stack Compliance Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check-tech-stack:
+    runs-on: ubuntu-latest
+    name: Verify C#-Only Technology Stack
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Check for Python files in backend
+      run: |
+        echo "🔍 Checking for Python files in backend directories..."
+        
+        PYTHON_FILES=$(find src/ -name "*.py" 2>/dev/null || true)
+        
+        if [ -n "$PYTHON_FILES" ]; then
+          echo "❌ ERROR: Python files found in backend directories!"
+          echo ""
+          echo "Files found:"
+          echo "$PYTHON_FILES"
+          echo ""
+          echo "TaskMaster standard: All backend code must be C#/.NET"
+          exit 1
+        fi
+        
+        echo "✅ No Python files found in src/"
+
+    - name: Check for Node.js backend code
+      run: |
+        echo "🔍 Checking for Node.js backend code..."
+        
+        # Check for server-side JS (exclude frontend/tooling)
+        if find src/ -name "*.js" -o -name "*.ts" 2>/dev/null | grep -v "wwwroot" | grep -v "node_modules" | head -1 > /dev/null 2>&1; then
+          JS_FILES=$(find src/ -name "*.js" -o -name "*.ts" 2>/dev/null | grep -v "wwwroot" | grep -v "node_modules")
+          if [ -n "$JS_FILES" ]; then
+            echo "⚠️  WARNING: JavaScript/TypeScript files found in src/"
+            echo "$JS_FILES"
+            echo ""
+            echo "Verify these are frontend-only files"
+          fi
+        fi
+        
+        echo "✅ No unexpected JS/TS backend code found"
+
+    - name: Verify .NET project structure
+      run: |
+        echo "🔍 Verifying .NET project structure..."
+        
+        CSPROJ_COUNT=$(find . -name "*.csproj" | wc -l)
+        
+        if [ "$CSPROJ_COUNT" -eq 0 ]; then
+          echo "❌ ERROR: No .csproj files found!"
+          exit 1
+        fi
+        
+        echo "✅ Found $CSPROJ_COUNT .NET project(s)"
+        find . -name "*.csproj" -exec echo "  - {}" \;
+
+    - name: Summary
+      run: |
+        echo ""
+        echo "═══════════════════════════════════════════════════════════════"
+        echo "✅ Technology Stack Compliance PASSED"
+        echo "   - No prohibited languages in backend"
+        echo "   - Valid .NET project structure"
+        echo "═══════════════════════════════════════════════════════════════"
