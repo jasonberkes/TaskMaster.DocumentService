@@ -1,4 +1,6 @@
 using System.Text;
+using TaskMaster.DocumentService.Api.Configuration;
+using TaskMaster.DocumentService.Api.Services;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -120,6 +122,10 @@ builder.Services.AddDocumentServiceSearch(builder.Configuration);
 
 // Add Document Service Processing layer (Inbox Processor Background Service)
 builder.Services.AddDocumentServiceProcessing(builder.Configuration);
+
+// Configure BlobIndexer - WI #3660
+builder.Services.Configure<BlobIndexerOptions>(builder.Configuration.GetSection(BlobIndexerOptions.SectionName));
+builder.Services.AddHostedService<BlobIndexerJob>();
 
 // Configure Blob Storage
 builder.Services.Configure<BlobStorageOptions>(

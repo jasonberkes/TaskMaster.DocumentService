@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("Client SDK for communicating with TaskMaster DocumentService API. Provides typed " +
     "clients for documents, templates, tenants, and search operations."))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3cf6d50bbaa2c2ad5fa103a1eaea3796dc24f13")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3446748ac6f03e3429ac72a699db2b6930c18ce")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskMaster DocumentService SDK")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskMaster.DocumentService.SDK")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

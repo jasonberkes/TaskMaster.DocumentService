@@ -406,6 +406,50 @@ public class MeilisearchService : ISearchService
     /// </summary>
     /// <param name="document">The document to map.</param>
     /// <returns>The searchable document.</returns>
+
+    /// <summary>
+    /// Indexes a batch of BlobMetadata entries into Meilisearch.
+    /// WI #3660: BlobMetadata indexing moved from Platform
+    /// </summary>
+    public async Task IndexBlobMetadataAsync(IEnumerable<Core.Entities.BlobMetadata> blobMetadataList, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var index = _client.Index(_options.IndexName);
+
+            var searchableDocs = blobMetadataList.Select(bm => new SearchableDocument
+            {
+                Id = $"blob-{bm.Id}",
+                DocumentId = bm.Id,
+                TenantId = bm.OrganizationId,
+                DocumentTypeId = 0,
+                Title = bm.Title,
+                Description = bm.Summary,
+                ExtractedText = bm.TextContent,
+                OriginalFileName = bm.BlobName,
+                MimeType = bm.MimeType,
+                Tags = bm.Tags,
+                Metadata = bm.ExtendedMetadata,
+                FileSizeBytes = bm.ContentLength,
+                Version = 1,
+                IsCurrentVersion = true,
+                CreatedAt = bm.CreatedAt,
+                CreatedBy = bm.CreatedBy,
+                UpdatedAt = bm.UpdatedAt,
+                UpdatedBy = bm.UpdatedBy
+            }).ToList();
+
+            await index.AddDocumentsAsync(searchableDocs, cancellationToken: cancellationToken);
+
+            _logger.LogInformation("Indexed {Count} BlobMetadata entries in Meilisearch", searchableDocs.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to index BlobMetadata batch");
+            throw;
+        }
+    }
+
     private SearchableDocument MapToSearchableDocument(Document document)
     {
         // Generate a unique Meilisearch ID if not already set

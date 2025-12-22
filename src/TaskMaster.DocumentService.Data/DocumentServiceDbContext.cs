@@ -60,6 +60,12 @@ public class DocumentServiceDbContext : DbContext
     public DbSet<CodeReview> CodeReviews => Set<CodeReview>();
 
     /// <summary>
+    /// Gets or sets the BlobMetadata DbSet.
+    /// WI #3660: DocumentService owns BlobMetadata in documents schema
+    /// </summary>
+    public DbSet<BlobMetadata> BlobMetadata => Set<BlobMetadata>();
+
+    /// <summary>
     /// Configures the entity models and relationships.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
@@ -533,6 +539,23 @@ public class DocumentServiceDbContext : DbContext
 
             entity.HasIndex(e => e.MigrationBatchId)
                 .HasDatabaseName("IX_CodeReviews_MigrationBatchId");
+        });
+
+        // Configure BlobMetadata - WI #3660
+        // DocumentService owns BlobMetadata in documents schema
+        modelBuilder.Entity<BlobMetadata>(entity =>
+        {
+            entity.ToTable("BlobMetadata", "documents");
+            entity.HasKey(e => e.Id);
+
+            entity.HasIndex(e => e.ContentType)
+                .HasDatabaseName("IX_BlobMetadata_ContentType");
+
+            entity.HasIndex(e => e.IsIndexed)
+                .HasDatabaseName("IX_BlobMetadata_IsIndexed");
+
+            entity.HasIndex(e => e.IsActive)
+                .HasDatabaseName("IX_BlobMetadata_IsActive");
         });
     }
 }

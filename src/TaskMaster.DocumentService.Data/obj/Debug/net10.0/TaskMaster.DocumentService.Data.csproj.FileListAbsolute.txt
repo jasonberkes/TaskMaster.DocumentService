@@ -1,3 +1,9 @@
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.csproj.AssemblyReference.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.AssemblyInfoInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.AssemblyInfo.cs
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.csproj.CoreCompileInputs.cache
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.sourcelink.json
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/BuildHost-net472/Microsoft.Build.Locator.dll
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe.config
@@ -50,12 +56,6 @@
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/TaskMaster.DocumentService.Data.pdb
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/TaskMaster.DocumentService.Core.dll
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/bin/Debug/net10.0/TaskMaster.DocumentService.Core.pdb
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.csproj.AssemblyReference.cache
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.GeneratedMSBuildEditorConfig.editorconfig
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.AssemblyInfoInputs.cache
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.AssemblyInfo.cs
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.csproj.CoreCompileInputs.cache
-/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.sourcelink.json
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMast.0DB5FE8B.Up2Date
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/TaskMaster.DocumentService.Data.dll
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/Debug/net10.0/refint/TaskMaster.DocumentService.Data.dll
