@@ -38,16 +38,16 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Authenticate Azure Artifacts
+    - name: Install Azure Artifacts Credential Provider
       run: |
-        # Get Azure Artifacts token using Azure CLI
+        # Install the credential provider
+        curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
+        
+        # Get access token for Azure DevOps
         TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
         
-        # Update the existing NuGet source with credentials (source defined in nuget.config)
-        dotnet nuget update source tm-packages \
-          --username az \
-          --password "$TOKEN" \
-          --store-password-in-clear-text
+        # Set environment variable for credential provider
+        echo "VSS_NUGET_EXTERNAL_FEED_ENDPOINTS={\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"az\", \"password\":\"$TOKEN\"}]}" >> $GITHUB_ENV
 
     - name: Restore dependencies
       run: dotnet restore
@@ -86,13 +86,11 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Authenticate Azure Artifacts
+    - name: Install Azure Artifacts Credential Provider
       run: |
+        curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
         TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
-        dotnet nuget update source tm-packages \
-          --username az \
-          --password "$TOKEN" \
-          --store-password-in-clear-text
+        echo "VSS_NUGET_EXTERNAL_FEED_ENDPOINTS={\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"az\", \"password\":\"$TOKEN\"}]}" >> $GITHUB_ENV
 
     - name: Restore dependencies
       run: dotnet restore
