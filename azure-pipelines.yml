@@ -9,8 +9,6 @@ trigger:
   branches:
     include:
       - main
-      # - fix/* # DISABLED: Redundant with PR builds
-      # - feature/* # DISABLED: Redundant with PR builds
   paths:
     exclude:
       - '**/*.md'
@@ -87,7 +85,6 @@ stages:
               path: '$(Pipeline.Workspace)/.nuget/packages'
             continueOnError: true
 
-
           # Authenticate with Azure Artifacts NuGet feed
           - task: NuGetAuthenticate@1
             displayName: 'Authenticate NuGet'
@@ -125,9 +122,32 @@ stages:
               summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
           # ============================================================================
+          # Publish Application for Container Build (main branch only)
+          # ============================================================================
+          # Pre-publish binaries so BuildContainer stage doesn't need NuGet restore
+          # This fixes NuGet 401 errors and speeds up container builds
+          # ============================================================================
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish Application'
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+            inputs:
+              command: 'publish'
+              publishWebProjects: false
+              projects: 'src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj'
+              arguments: '-c $(buildConfiguration) --no-build -o $(Build.ArtifactStagingDirectory)/publish'
+              zipAfterPublish: false
+              modifyOutputPath: false
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Upload Build Artifacts'
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)/publish'
+              artifact: 'app-binaries'
+              publishLocation: 'pipeline'
+
+          # ============================================================================
           # Remove branch.name for SonarQube Community Edition
-          # Community Edition does not support branch analysis, but the Azure DevOps
-          # extension automatically adds sonar.branch.name. This script removes it.
           # ============================================================================
           - script: |
               FILTERED_PARAMS=$(echo $SONARQUBE_SCANNER_PARAMS | sed 's/"sonar.branch.name":"[^"]*"\,//g')
@@ -188,7 +208,10 @@ stages:
             displayName: 'Extract Semantic Version'
 
   # ============================================================================
-  # Stage 3: Build Container
+  # Stage 3: Build Container (Runtime-only Dockerfile - no NuGet needed)
+  # ============================================================================
+  # Uses pre-built binaries from Build stage - no SDK or NuGet restore in container
+  # This pattern avoids Azure Artifacts auth issues in ACR Tasks
   # ============================================================================
   - stage: BuildContainer
     displayName: 'Build Container Image'
@@ -203,9 +226,58 @@ stages:
         displayName: 'Build and Push to ACR'
         steps:
           - checkout: self
-            fetchDepth: 0
+            fetchDepth: 1
 
-          # Build using ACR Tasks
+          # Download pre-built binaries from Build stage
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Build Artifacts'
+            inputs:
+              buildType: 'current'
+              artifactName: 'app-binaries'
+              targetPath: '$(Pipeline.Workspace)/publish'
+
+          # Create runtime-only Dockerfile (no SDK, no restore needed)
+          - script: |
+              mkdir -p $(Pipeline.Workspace)/docker-context
+              cp -r $(Pipeline.Workspace)/publish $(Pipeline.Workspace)/docker-context/
+              
+              cd $(Pipeline.Workspace)/docker-context
+              cat > Dockerfile << 'DOCKERFILE'
+              FROM mcr.microsoft.com/dotnet/aspnet:10.0
+              WORKDIR /app
+              
+              # Install curl for health checks
+              RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+              
+              # Copy pre-built binaries
+              COPY publish/ .
+              
+              # Configure environment
+              ENV ASPNETCORE_ENVIRONMENT=Production
+              ENV DOTNET_RUNNING_IN_CONTAINER=true
+              
+              # Create non-root user
+              RUN useradd -m appuser && chown -R appuser:appuser /app
+              USER appuser
+              
+              EXPOSE 8080
+              
+              # Health check
+              HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+                  CMD curl -f http://localhost:8080/health || exit 1
+              
+              ENTRYPOINT ["dotnet", "TaskMaster.DocumentService.Api.dll"]
+              DOCKERFILE
+              
+              echo "=== Dockerfile created ==="
+              cat Dockerfile
+              echo ""
+              echo "=== Context contents ==="
+              ls -la
+              ls -la publish/ | head -20
+            displayName: 'Create Runtime Dockerfile'
+
+          # Build and push using az acr build
           - task: AzureCLI@2
             displayName: 'Build Container via ACR Tasks'
             inputs:
@@ -228,19 +300,15 @@ stages:
                 echo "Commit: $SHORT_SHA"
                 echo "=========================================="
                 
-                cd src/TaskMaster.DocumentService.Api
-                
-                # Get Azure Artifacts token for NuGet restore in container build
-                FEED_TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
+                cd $(Pipeline.Workspace)/docker-context
                 
                 az acr build \
                   --registry $(acrName) \
                   --image $(imageName):$VERSION \
                   --image $(imageName):$SHORT_SHA \
                   --image $(imageName):latest \
-                  --build-arg FEED_ACCESSTOKEN="$FEED_TOKEN" \
                   --file Dockerfile \
-                  ../..
+                  .
                 
                 echo ""
                 echo "✅ Container built and pushed successfully"
