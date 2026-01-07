@@ -6,9 +6,6 @@ WORKDIR /src
 # Install Azure Artifacts Credential Provider
 RUN curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
 
-# Set credentials for Azure Artifacts - ENV properly expands ARG
-ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${FEED_ACCESSTOKEN}\"}]}"
-
 # Copy nuget.config first
 COPY ["nuget.config", "./"]
 
@@ -21,8 +18,9 @@ COPY ["src/TaskMaster.DocumentService.Search/TaskMaster.DocumentService.Search.c
 COPY ["src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj", "src/TaskMaster.DocumentService.Processing/"]
 COPY ["src/TaskMaster.DocumentService.SDK/TaskMaster.DocumentService.SDK.csproj", "src/TaskMaster.DocumentService.SDK/"]
 
-# Restore dependencies
-RUN dotnet restore "src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj"
+# Restore with token - using shell to expand ARG
+RUN VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${FEED_ACCESSTOKEN}\"}]}" \
+    dotnet restore "src/TaskMaster.DocumentService.Api/TaskMaster.DocumentService.Api.csproj"
 
 # Copy source code
 COPY ["src/", "src/"]
@@ -36,10 +34,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 EXPOSE 8080
 
-# Copy published output
 COPY --from=build /app/publish .
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
