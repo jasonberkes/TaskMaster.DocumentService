@@ -43,9 +43,8 @@ jobs:
         # Get Azure Artifacts token using Azure CLI
         TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
         
-        # Add the NuGet source with the token
-        dotnet nuget add source https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json \
-          --name tm-packages \
+        # Update the existing NuGet source with credentials (source defined in nuget.config)
+        dotnet nuget update source tm-packages \
           --username az \
           --password "$TOKEN" \
           --store-password-in-clear-text
@@ -90,8 +89,7 @@ jobs:
     - name: Authenticate Azure Artifacts
       run: |
         TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
-        dotnet nuget add source https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json \
-          --name tm-packages \
+        dotnet nuget update source tm-packages \
           --username az \
           --password "$TOKEN" \
           --store-password-in-clear-text
