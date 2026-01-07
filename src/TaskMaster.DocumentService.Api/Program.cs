@@ -1,4 +1,5 @@
 using System.Text;
+using TaskMaster.AI.SDK.Extensions;
 using TaskMaster.DocumentService.Api.Configuration;
 using TaskMaster.DocumentService.Api.Services;
 using Azure.Storage.Blobs;
@@ -123,6 +124,11 @@ builder.Services.AddDocumentServiceSearch(builder.Configuration);
 // Add Document Service Processing layer (Inbox Processor Background Service)
 builder.Services.AddDocumentServiceProcessing(builder.Configuration);
 
+// Add AI Gateway for embeddings and cost tracking
+var sqlConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("DefaultConnection is not configured.");
+builder.Services.AddAzureOpenAi(builder.Configuration, sqlConnectionString);
+
 // Configure BlobIndexer - WI #3660
 builder.Services.Configure<BlobIndexerOptions>(builder.Configuration.GetSection(BlobIndexerOptions.SectionName));
 builder.Services.AddHostedService<BlobIndexerJob>();
@@ -149,6 +155,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add Document Service (Business Logic Layer)
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IEmbeddingService, EmbeddingService>();
 builder.Services.AddScoped<IDocumentTypeService, DocumentTypeService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();

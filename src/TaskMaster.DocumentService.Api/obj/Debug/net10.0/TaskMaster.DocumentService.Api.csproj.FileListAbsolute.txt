@@ -149,3 +149,9 @@
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/obj/Debug/net10.0/TaskMaster.DocumentService.Api.pdb
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/obj/Debug/net10.0/TaskMaster.DocumentService.Api.genruntimeconfig.cache
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/obj/Debug/net10.0/ref/TaskMaster.DocumentService.Api.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/Azure.AI.OpenAI.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/OpenAI.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/TaskMaster.AI.Core.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/TaskMaster.AI.Data.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/TaskMaster.AI.Providers.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Api/bin/Debug/net10.0/TaskMaster.AI.SDK.dll

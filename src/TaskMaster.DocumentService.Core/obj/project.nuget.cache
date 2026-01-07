@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "N1j1i+0mekY=",
+  "dgSpecHash": "exEDhBbrcUc=",
   "success": true,
   "projectFilePath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/TaskMaster.DocumentService.Core.csproj",
   "expectedPackageFiles": [
@@ -8,14 +8,16 @@
     "/Users/jasonberkes/.nuget/packages/azure.storage.blobs/12.26.0/azure.storage.blobs.12.26.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/azure.storage.common/12.25.0/azure.storage.common.12.25.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.bcl.asyncinterfaces/8.0.0/microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.0/microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.0/microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options/10.0.0/microsoft.extensions.options.10.0.0.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.primitives/10.0.0/microsoft.extensions.primitives.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.1/microsoft.extensions.dependencyinjection.abstractions.10.0.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.1/microsoft.extensions.logging.abstractions.10.0.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options/10.0.1/microsoft.extensions.options.10.0.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.primitives/10.0.1/microsoft.extensions.primitives.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.clientmodel/1.6.1/system.clientmodel.1.6.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/system.componentmodel.annotations/5.0.0/system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.io.hashing/8.0.0/system.io.hashing.8.0.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.memory.data/8.0.1/system.memory.data.8.0.1.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512"
+    "/Users/jasonberkes/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.core/1.0.0/taskmaster.ai.core.1.0.0.nupkg.sha512"
   ],
   "logs": [
     {

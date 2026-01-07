@@ -14,13 +14,14 @@
         "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
+          "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/NuGet.Config",
           "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
@@ -50,15 +51,19 @@
             },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "Microsoft.Extensions.Options": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "System.Text.Json": {
               "target": "Package",
               "version": "[10.0.0, )"
+            },
+            "TaskMaster.AI.Core": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             }
           },
           "imports": [
@@ -365,13 +370,14 @@
         "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Data/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
+          "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/NuGet.Config",
           "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
@@ -714,13 +720,14 @@
         "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
+          "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/NuGet.Config",
           "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
@@ -764,7 +771,7 @@
             },
             "Microsoft.Extensions.Hosting.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "PdfPig": {
               "target": "Package",
@@ -1075,13 +1082,14 @@
         "outputPath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Search/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
+          "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/NuGet.Config",
           "/Users/jasonberkes/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
@@ -1115,19 +1123,19 @@
             },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "Microsoft.Extensions.Diagnostics.HealthChecks": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             },
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.1, )"
             }
           },
           "imports": [

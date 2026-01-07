@@ -16,6 +16,7 @@
           "Microsoft.AspNetCore.OpenApi": "10.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.0",
           "Swashbuckle.AspNetCore": "10.0.1",
+          "TaskMaster.AI.SDK": "1.0.0",
           "TaskMaster.DocumentService.Core": "1.0.0",
           "TaskMaster.DocumentService.Data": "1.0.0",
           "TaskMaster.DocumentService.Processing": "1.0.0",
@@ -46,6 +47,18 @@
           "lib/netstandard2.0/HealthChecks.SqlServer.dll": {
             "assemblyVersion": "7.0.0.0",
             "fileVersion": "7.0.0.0"
+          }
+        }
+      },
+      "Azure.AI.OpenAI/2.1.0": {
+        "dependencies": {
+          "Azure.Core": "1.50.0",
+          "OpenAI": "2.1.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.AI.OpenAI.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.100.24.60605"
           }
         }
       },
@@ -430,6 +443,17 @@
           }
         }
       },
+      "OpenAI/2.1.0": {
+        "dependencies": {
+          "System.ClientModel": "1.8.0"
+        },
+        "runtime": {
+          "lib/net6.0/OpenAI.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
       "PdfPig/0.1.12": {
         "runtime": {
           "lib/net8.0/UglyToad.PdfPig.Core.dll": {
@@ -565,9 +589,55 @@
           }
         }
       },
+      "TaskMaster.AI.Core/1.0.0": {
+        "runtime": {
+          "lib/net10.0/TaskMaster.AI.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "TaskMaster.AI.Data/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.0",
+          "TaskMaster.AI.Core": "1.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/TaskMaster.AI.Data.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "TaskMaster.AI.Providers/1.0.0": {
+        "dependencies": {
+          "Azure.AI.OpenAI": "2.1.0",
+          "TaskMaster.AI.Core": "1.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/TaskMaster.AI.Providers.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "TaskMaster.AI.SDK/1.0.0": {
+        "dependencies": {
+          "TaskMaster.AI.Core": "1.0.0",
+          "TaskMaster.AI.Data": "1.0.0",
+          "TaskMaster.AI.Providers": "1.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/TaskMaster.AI.SDK.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "TaskMaster.DocumentService.Core/1.0.0": {
         "dependencies": {
-          "Azure.Storage.Blobs": "12.26.0"
+          "Azure.Storage.Blobs": "12.26.0",
+          "TaskMaster.AI.Core": "1.0.0"
         },
         "runtime": {
           "TaskMaster.DocumentService.Core.dll": {
@@ -637,6 +707,13 @@
       "sha512": "sha512-H3xMIeToQTOniukoqnkIc6F1UZCJDuHut74WCr8hlQji5J5m0iyZITPsNnLIGwVQm3tkEHYy9TQCH7diSwQFfg==",
       "path": "aspnetcore.healthchecks.sqlserver/7.0.0",
       "hashPath": "aspnetcore.healthchecks.sqlserver.7.0.0.nupkg.sha512"
+    },
+    "Azure.AI.OpenAI/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-doixr3tcsIcdzbzF9NxKt+6U0NKj6aPeOCPYONPsWjyf3gxVndVJAdjPcVdqeR/3vcRHXRgGnGlv+iXx5jMA4g==",
+      "path": "azure.ai.openai/2.1.0",
+      "hashPath": "azure.ai.openai.2.1.0.nupkg.sha512"
     },
     "Azure.Core/1.50.0": {
       "type": "package",
@@ -841,6 +918,13 @@
       "path": "microsoft.sqlserver.server/1.0.0",
       "hashPath": "microsoft.sqlserver.server.1.0.0.nupkg.sha512"
     },
+    "OpenAI/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zl72nyP4O94ZyEoCLoE8qoc5vp8kSJmRuqR+UdK+jNIjFJGWJYjsb4rAGpMWWRTbPYuk82E8myMJdVQurMLDnQ==",
+      "path": "openai/2.1.0",
+      "hashPath": "openai.2.1.0.nupkg.sha512"
+    },
     "PdfPig/0.1.12": {
       "type": "package",
       "serviceable": true,
@@ -924,6 +1008,34 @@
       "sha512": "sha512-o94k2RKuAce3GeDMlUvIXlhVa1kWpJw95E6C9LwW0KlG0nj5+SgCiIxJ2Eroqb9sLtG1mEMbFttZIBZ13EJPvQ==",
       "path": "system.security.cryptography.protecteddata/9.0.4",
       "hashPath": "system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
+    },
+    "TaskMaster.AI.Core/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8A6cdAx9WlBv8aiBOIiW94KV3XlMyq32om+XIkYhjLr1th0ajOjrSuMRdM8Lbf4UtdWO9UoGrdrNXo8uyICGCw==",
+      "path": "taskmaster.ai.core/1.0.0",
+      "hashPath": "taskmaster.ai.core.1.0.0.nupkg.sha512"
+    },
+    "TaskMaster.AI.Data/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ulBiI2axPcAxea8XjOFbv6CpneQz4cwg8dYUjk0AF6uf0SvQLO0MfN5gzpkzKBFos42+mtHWVyqHfFvajLEG8Q==",
+      "path": "taskmaster.ai.data/1.0.0",
+      "hashPath": "taskmaster.ai.data.1.0.0.nupkg.sha512"
+    },
+    "TaskMaster.AI.Providers/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-g23veh49vEfyKn0DoiZqwvy0ty3u9qQgoxNMYAa4sWvQn03kSKScWvBvmTshBjnaYCPSy/Q4CDs3apkO1RGa4w==",
+      "path": "taskmaster.ai.providers/1.0.0",
+      "hashPath": "taskmaster.ai.providers.1.0.0.nupkg.sha512"
+    },
+    "TaskMaster.AI.SDK/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eTlTUE9ip8ErOUoNBH5m2EP1lge/x0KUvsB1+40bnmkWPxyLKWxZNY58Nzvv0oUgxwG83jcy4hz0PL7INw8X4w==",
+      "path": "taskmaster.ai.sdk/1.0.0",
+      "hashPath": "taskmaster.ai.sdk.1.0.0.nupkg.sha512"
     },
     "TaskMaster.DocumentService.Core/1.0.0": {
       "type": "project",

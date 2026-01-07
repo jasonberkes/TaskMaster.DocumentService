@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskMaster.DocumentService.Search")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3cf6d50bbaa2c2ad5fa103a1eaea3796dc24f13")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+34af4ea26ebd6355f88cf5a534a543384428d05d")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskMaster.DocumentService.Search")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskMaster.DocumentService.Search")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

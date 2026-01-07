@@ -134,3 +134,4 @@
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Search.Tests/obj/Debug/net10.0/TaskMaster.DocumentService.Search.Tests.pdb
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Search.Tests/obj/Debug/net10.0/TaskMaster.DocumentService.Search.Tests.genruntimeconfig.cache
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Search.Tests/obj/Debug/net10.0/ref/TaskMaster.DocumentService.Search.Tests.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Search.Tests/bin/Debug/net10.0/TaskMaster.AI.Core.dll
