@@ -88,12 +88,18 @@ stages:
             continueOnError: true
 
 
+          # Authenticate with Azure Artifacts NuGet feed
+          - task: NuGetAuthenticate@1
+            displayName: 'Authenticate NuGet'
+
           # Restore
           - task: DotNetCoreCLI@2
             displayName: 'Restore'
             inputs:
               command: 'restore'
               projects: 'TaskMaster.DocumentService.sln'
+              feedsToUse: 'config'
+              nugetConfigPath: 'nuget.config'
 
           # Build
           - task: DotNetCoreCLI@2
@@ -224,11 +230,15 @@ stages:
                 
                 cd src/TaskMaster.DocumentService.Api
                 
+                # Get Azure Artifacts token for NuGet restore in container build
+                FEED_TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
+                
                 az acr build \
                   --registry $(acrName) \
                   --image $(imageName):$VERSION \
                   --image $(imageName):$SHORT_SHA \
                   --image $(imageName):latest \
+                  --build-arg FEED_ACCESSTOKEN="$FEED_TOKEN" \
                   --file Dockerfile \
                   ../..
                 
