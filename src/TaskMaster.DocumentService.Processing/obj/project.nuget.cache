@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "CmSMjewUhRk=",
+  "dgSpecHash": "hckzp5yOUCk=",
   "success": true,
   "projectFilePath": "/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/src/TaskMaster.DocumentService.Processing/TaskMaster.DocumentService.Processing.csproj",
   "expectedPackageFiles": [
+    "/Users/jasonberkes/.nuget/packages/azure.ai.openai/2.1.0/azure.ai.openai.2.1.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/azure.core/1.47.3/azure.core.1.47.3.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/azure.identity/1.14.2/azure.identity.1.14.2.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/azure.storage.blobs/12.26.0/azure.storage.blobs.12.26.0.nupkg.sha512",
@@ -25,14 +26,16 @@
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.configuration/10.0.1/microsoft.extensions.configuration.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.configuration.abstractions/10.0.1/microsoft.extensions.configuration.abstractions.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.configuration.binder/10.0.1/microsoft.extensions.configuration.binder.10.0.1.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection/10.0.0/microsoft.extensions.dependencyinjection.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection/10.0.1/microsoft.extensions.dependencyinjection.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.1/microsoft.extensions.dependencyinjection.abstractions.10.0.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.diagnostics/10.0.1/microsoft.extensions.diagnostics.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.diagnostics.abstractions/10.0.1/microsoft.extensions.diagnostics.abstractions.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.diagnostics.healthchecks/10.0.1/microsoft.extensions.diagnostics.healthchecks.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.diagnostics.healthchecks.abstractions/10.0.1/microsoft.extensions.diagnostics.healthchecks.abstractions.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.fileproviders.abstractions/10.0.1/microsoft.extensions.fileproviders.abstractions.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.hosting.abstractions/10.0.1/microsoft.extensions.hosting.abstractions.10.0.1.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging/10.0.0/microsoft.extensions.logging.10.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.http/10.0.1/microsoft.extensions.http.10.0.1.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging/10.0.1/microsoft.extensions.logging.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.1/microsoft.extensions.logging.abstractions.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options/10.0.1/microsoft.extensions.options.10.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.extensions.options.configurationextensions/10.0.1/microsoft.extensions.options.configurationextensions.10.0.1.nupkg.sha512",
@@ -46,6 +49,7 @@
     "/Users/jasonberkes/.nuget/packages/microsoft.identitymodel.protocols.openidconnect/7.7.1/microsoft.identitymodel.protocols.openidconnect.7.7.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.identitymodel.tokens/8.7.0/microsoft.identitymodel.tokens.8.7.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/microsoft.sqlserver.server/1.0.0/microsoft.sqlserver.server.1.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/openai/2.1.0/openai.2.1.0.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/pdfpig/0.1.12/pdfpig.0.1.12.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.clientmodel/1.6.1/system.clientmodel.1.6.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.componentmodel.annotations/5.0.0/system.componentmodel.annotations.5.0.0.nupkg.sha512",
@@ -57,7 +61,10 @@
     "/Users/jasonberkes/.nuget/packages/system.memory.data/8.0.1/system.memory.data.8.0.1.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.security.cryptography.pkcs/9.0.4/system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "/Users/jasonberkes/.nuget/packages/system.security.cryptography.protecteddata/9.0.4/system.security.cryptography.protecteddata.9.0.4.nupkg.sha512",
-    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.core/1.0.0/taskmaster.ai.core.1.0.0.nupkg.sha512"
+    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.core/1.0.0/taskmaster.ai.core.1.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.data/1.0.0/taskmaster.ai.data.1.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.providers/1.0.0/taskmaster.ai.providers.1.0.0.nupkg.sha512",
+    "/Users/jasonberkes/.nuget/packages/taskmaster.ai.sdk/1.0.0/taskmaster.ai.sdk.1.0.0.nupkg.sha512"
   ],
   "logs": []
 }

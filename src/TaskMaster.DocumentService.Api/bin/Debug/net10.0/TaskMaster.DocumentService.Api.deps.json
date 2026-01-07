@@ -637,7 +637,8 @@
       "TaskMaster.DocumentService.Core/1.0.0": {
         "dependencies": {
           "Azure.Storage.Blobs": "12.26.0",
-          "TaskMaster.AI.Core": "1.0.0"
+          "TaskMaster.AI.Core": "1.0.0",
+          "TaskMaster.AI.SDK": "1.0.0"
         },
         "runtime": {
           "TaskMaster.DocumentService.Core.dll": {

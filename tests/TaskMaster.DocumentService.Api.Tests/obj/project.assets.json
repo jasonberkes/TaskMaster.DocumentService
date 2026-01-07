@@ -1779,7 +1779,8 @@
           "Azure.Storage.Blobs": "12.26.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.1",
           "Microsoft.Extensions.Options": "10.0.1",
-          "TaskMaster.AI.Core": "1.0.0"
+          "TaskMaster.AI.Core": "1.0.0",
+          "TaskMaster.AI.SDK": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TaskMaster.DocumentService.Core.dll": {}

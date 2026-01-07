@@ -1,6 +1,16 @@
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG FEED_ACCESSTOKEN
 WORKDIR /src
+
+# Install Azure Artifacts Credential Provider
+RUN curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
+
+# Copy nuget.config first
+COPY ["nuget.config", "./"]
+
+# Configure credentials for Azure Artifacts
+ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${FEED_ACCESSTOKEN}\"}]}"
 
 # Copy solution and project files
 COPY ["TaskMaster.DocumentService.sln", "./"]
@@ -29,10 +39,10 @@ WORKDIR /app
 # Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Copy published files
+# Copy published app
 COPY --from=build /app/publish .
 
-# Change ownership to non-root user
+# Set permissions
 RUN chown -R appuser:appuser /app
 
 # Switch to non-root user
@@ -41,11 +51,9 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# Set ASP.NET Core to listen on port 8080
-ENV ASPNETCORE_URLS=http://+:8080
-
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl --fail http://localhost:8080/health || exit 1
 
+# Entry point
 ENTRYPOINT ["dotnet", "TaskMaster.DocumentService.Api.dll"]

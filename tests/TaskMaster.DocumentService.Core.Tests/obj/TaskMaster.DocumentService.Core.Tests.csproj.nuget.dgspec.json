@@ -64,6 +64,10 @@
             "TaskMaster.AI.Core": {
               "target": "Package",
               "version": "[1.0.0, )"
+            },
+            "TaskMaster.AI.SDK": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             }
           },
           "imports": [

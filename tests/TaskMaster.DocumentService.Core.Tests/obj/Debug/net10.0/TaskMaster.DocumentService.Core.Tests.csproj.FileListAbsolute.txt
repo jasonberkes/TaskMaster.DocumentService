@@ -210,3 +210,14 @@
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/obj/Debug/net10.0/TaskMaster.DocumentService.Core.Tests.genruntimeconfig.cache
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/obj/Debug/net10.0/ref/TaskMaster.DocumentService.Core.Tests.dll
 /Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/TaskMaster.AI.Core.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Azure.AI.OpenAI.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Configuration.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Configuration.Binder.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Diagnostics.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Http.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/OpenAI.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/TaskMaster.AI.Data.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/TaskMaster.AI.Providers.dll
+/Users/jasonberkes/Dropbox/Dev/TaskMaster.DocumentService/tests/TaskMaster.DocumentService.Core.Tests/bin/Debug/net10.0/TaskMaster.AI.SDK.dll
