@@ -11,7 +11,6 @@ permissions:
   contents: read
   checks: write
   pull-requests: write
-  id-token: write  # Required for Azure OIDC auth
 
 env:
   DOTNET_VERSION: '10.0.x'
@@ -30,24 +29,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Install Azure Artifacts Credential Provider
-      run: |
-        # Install the credential provider
-        curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
-        
-        # Get access token for Azure DevOps
-        TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
-        
-        # Set environment variable for credential provider
-        echo "VSS_NUGET_EXTERNAL_FEED_ENDPOINTS={\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"az\", \"password\":\"$TOKEN\"}]}" >> $GITHUB_ENV
 
     - name: Restore dependencies
       run: dotnet restore
@@ -78,19 +59,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Install Azure Artifacts Credential Provider
-      run: |
-        curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
-        TOKEN=$(az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
-        echo "VSS_NUGET_EXTERNAL_FEED_ENDPOINTS={\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/jasonberkes/TaskMaster/_packaging/tm-packages/nuget/v3/index.json\", \"username\":\"az\", \"password\":\"$TOKEN\"}]}" >> $GITHUB_ENV
 
     - name: Restore dependencies
       run: dotnet restore
