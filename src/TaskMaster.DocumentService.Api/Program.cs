@@ -1,4 +1,6 @@
 using System.Text;
+using TaskMaster.Memory.Extensions;
+using TaskMaster.DocumentService.Core.Services.Memory;
 using TaskMaster.AI.SDK.Extensions;
 using TaskMaster.DocumentService.Api.Configuration;
 using TaskMaster.DocumentService.Api.Services;
@@ -128,6 +130,11 @@ builder.Services.AddDocumentServiceProcessing(builder.Configuration);
 var sqlConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("DefaultConnection is not configured.");
 builder.Services.AddAzureOpenAi(builder.Configuration, sqlConnectionString);
+
+// Add Memory services (Qdrant for vector search, FalkorDB for graph)
+builder.Services.AddVectorMemoryServices(builder.Configuration);
+builder.Services.AddGraphMemoryServices(builder.Configuration);
+builder.Services.AddScoped<IDocumentMemoryService, DocumentMemoryService>();
 
 // Configure BlobIndexer - WI #3660
 builder.Services.Configure<BlobIndexerOptions>(builder.Configuration.GetSection(BlobIndexerOptions.SectionName));

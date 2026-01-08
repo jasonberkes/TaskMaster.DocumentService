@@ -13,6 +13,7 @@
     <PackageReference Include="System.Text.Json" Version="10.0.0" />
     <PackageReference Include="TaskMaster.AI.Core" Version="1.0.0" />
     <PackageReference Include="TaskMaster.AI.SDK" Version="1.0.0" />
+    <PackageReference Include="TaskMaster.Memory" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
