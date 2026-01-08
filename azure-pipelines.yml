@@ -67,6 +67,10 @@ variables:
     value: 'TaskMaster DocumentService'
   - name: appVersionsApiUrl
     value: 'https://taskmaster-platform.thankfulsand-8986c25c.eastus2.azurecontainerapps.io/api/v1/versions'
+  - name: resourceGroup
+    value: 'tm-rg-prod-eus2'
+  - name: containerAppName
+    value: 'tm-documentservice-prod-eus2'
 
 stages:
   # ============================================================================
@@ -393,13 +397,99 @@ stages:
   # ============================================================================
   # Stage 4: Deploy (DISABLED)
   # ============================================================================
+  # ============================================================================
+  # Stage 4: Deploy - Blue/Green Deployment to Azure Container Apps
+  # ============================================================================
+  # Uses blue-green deployment script for zero-downtime updates.
+  # Only runs on scheduled builds when there's a new container to deploy.
+  # ============================================================================
   - stage: Deploy
-    displayName: 'Deploy to ACA (DISABLED)'
-    dependsOn: BuildContainer
-    # DISABLED: Deploy handled by GitHub Actions scheduled workflow
-    condition: and(eq(1, 0), succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    displayName: 'Deploy to ACA (Blue/Green)'
+    dependsOn:
+      - Build
+      - SemanticRelease
+      - BuildContainer
+    # Only run on Schedule or Manual builds, AND only if BuildContainer succeeded
+    condition: |
+      and(
+        or(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.Reason'], 'Manual')),
+        in(dependencies.Build.result, 'Succeeded', 'SucceededWithIssues'),
+        in(dependencies.BuildContainer.result, 'Succeeded', 'SucceededWithIssues')
+      )
+    variables:
+      semanticVersion: $[ stageDependencies.SemanticRelease.Release.outputs['semver.semanticVersion'] ]
     jobs:
-      - job: DeployACA
-        displayName: 'Deploy to Azure Container Apps'
-        steps:
-          - script: echo "Deploy stage disabled - use scheduled deployment"
+      - deployment: DeployACA
+        displayName: 'Blue/Green Deploy to Container App'
+        environment: 'production-documentservice'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  clean: true
+                  fetchDepth: 0
+
+                # ============================================================
+                # Blue/Green Deployment using deploy script
+                # ============================================================
+                - task: AzureCLI@2
+                  displayName: 'Execute Blue/Green Deployment'
+                  inputs:
+                    azureSubscription: 'Azure-TaskMaster-Production'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      set -e
+                      
+                      SEMANTIC_VERSION="$(semanticVersion)"
+                      VERSION="${SEMANTIC_VERSION:-$(Build.BuildId)}"
+                      echo "🚀 Starting Blue/Green deployment for version: $VERSION"
+                      
+                      # Make script executable
+                      chmod +x ./scripts/deploy-bluegreen.sh
+                      
+                      # Execute blue-green deployment (skip gradual for scheduled deploys)
+                      ./scripts/deploy-bluegreen.sh "$VERSION" --skip-logging
+                      
+                      echo "✅ Blue/Green deployment completed successfully"
+                  env:
+                    RESOURCE_GROUP: $(resourceGroup)
+                    CONTAINER_APP_NAME: $(containerAppName)
+                    ACR_REGISTRY: $(acrName).azurecr.io
+                    REPOSITORY_NAME: $(imageName)
+
+                # ============================================================
+                # Record deployment in AppVersions table
+                # ============================================================
+                - task: AzureCLI@2
+                  displayName: 'Mark Version as Deployed'
+                  inputs:
+                    azureSubscription: 'Azure-TaskMaster-Production'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      set -e
+                      
+                      SEMANTIC_VERSION="$(semanticVersion)"
+                      VERSION="${SEMANTIC_VERSION:-$(Build.BuildId)}"
+                      
+                      # Get API key from Key Vault
+                      API_KEY=$(az keyvault secret show --vault-name tm-kv-prod-eus2 --name TASKMASTER-SERVICE-API-KEY --query value -o tsv)
+                      
+                      echo "📝 Recording deployment: $VERSION"
+                      
+                      # Mark as deployed in AppVersions
+                      HTTP_CODE=$(curl -s -w "%{http_code}" -o /tmp/api_response.json \
+                        --max-time 30 --retry 2 --retry-delay 1 \
+                        -X PUT "$(appVersionsApiUrl)/$(imageName)/$VERSION/deployed" \
+                        -H "Content-Type: application/json" \
+                        -H "X-API-Key: $API_KEY")
+                      
+                      if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 204 ]; then
+                        echo "✅ Version $VERSION marked as deployed"
+                      else
+                        echo "⚠️ Failed to mark as deployed (HTTP $HTTP_CODE) - continuing"
+                        cat /tmp/api_response.json || true
+                      fi
+                  continueOnError: true
