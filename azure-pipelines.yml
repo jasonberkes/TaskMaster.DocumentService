@@ -3,22 +3,47 @@
 # ============================================================================
 # Document processing microservice for templates, storage, and content
 # Standardized to match TaskMaster.Platform pattern (WI #3519)
+#
+# Build Strategy:
+# - PR to main: Build & Test only (validation)
+# - Scheduled (6am/12pm/6pm/12am CST): Build container IF code changed
+# - NO automatic builds on merge to main (only scheduled)
 # ============================================================================
 
-trigger:
-  branches:
-    include:
-      - main
-  paths:
-    exclude:
-      - '**/*.md'
-      - 'docs/**'
-      - '.github/**'
+# Disable CI trigger - only build on schedule or PR
+trigger: none
 
 pr:
   branches:
     include:
       - main
+
+# Scheduled builds - only if code changed since last build
+schedules:
+  - cron: '0 12 * * *'  # 6:00 AM CST (12:00 UTC)
+    displayName: 'Scheduled Build - 6am CST'
+    branches:
+      include:
+        - main
+    always: false
+  - cron: '0 18 * * *'  # 12:00 PM CST (18:00 UTC)
+    displayName: 'Scheduled Build - 12pm CST'
+    branches:
+      include:
+        - main
+    always: false
+  - cron: '0 0 * * *'   # 6:00 PM CST (00:00 UTC next day)
+    displayName: 'Scheduled Build - 6pm CST'
+    branches:
+      include:
+        - main
+    always: false
+  - cron: '0 6 * * *'   # 12:00 AM CST (06:00 UTC)
+    displayName: 'Scheduled Build - 12am CST'
+    branches:
+      include:
+        - main
+    always: false
 
 # Use self-hosted agents for consistency
 pool:
