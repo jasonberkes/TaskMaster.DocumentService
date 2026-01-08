@@ -203,7 +203,7 @@ stages:
             displayName: 'Break build on Quality Gate failure'
             inputs:
               SonarQube: '$(sonarQubeServiceConnection)'
-            condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+            condition: "false"  # Disabled - SonarQube only runs on main branch
 
   # ============================================================================
   # Stage 2: Semantic Version
