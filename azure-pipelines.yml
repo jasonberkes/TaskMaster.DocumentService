@@ -421,7 +421,7 @@ stages:
     jobs:
       - deployment: DeployACA
         displayName: 'Blue/Green Deploy to Container App'
-        environment: 'production-documentservice'
+        environment: 'production'
         strategy:
           runOnce:
             deploy:
