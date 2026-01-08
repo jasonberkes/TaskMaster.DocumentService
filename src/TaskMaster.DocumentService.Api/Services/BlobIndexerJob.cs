@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using TaskMaster.DocumentService.Api.Configuration;
 using TaskMaster.DocumentService.Data;
+using TaskMaster.DocumentService.Search.Interfaces;
 using TaskMaster.DocumentService.Search.Services;
 
 namespace TaskMaster.DocumentService.Api.Services;
@@ -82,7 +83,7 @@ public class BlobIndexerJob : BackgroundService
 
         using var scope = _scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<DocumentServiceDbContext>();
-        var meilisearchService = scope.ServiceProvider.GetRequiredService<MeilisearchService>();
+        var meilisearchService = scope.ServiceProvider.GetRequiredService<ISearchService>();
 
         try
         {

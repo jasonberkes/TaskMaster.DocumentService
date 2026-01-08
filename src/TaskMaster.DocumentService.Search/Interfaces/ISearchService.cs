@@ -76,4 +76,12 @@ public interface ISearchService
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task ClearIndexAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Indexes blob metadata entries in the search index.
+    /// </summary>
+    /// <param name="blobMetadataList">The blob metadata entries to index.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task IndexBlobMetadataAsync(IEnumerable<BlobMetadata> blobMetadataList, CancellationToken cancellationToken = default);
 }
